@@ -1,0 +1,25 @@
+{
+  "name": "hello-perl-psgi",
+  "version": "0.0.1",
+  "description": "A simple Perl PSGI example application",
+  "main": "scripts/long_job_anyevent_01.psgi",
+  "scripts": {
+    "build": "mkdir -p ~/bin && curl -L https://cpanmin.us/ -o ~/bin/cpanm && chmod +x ~/bin/cpanm && cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib) && cpanm -vn --installdeps . ",
+    "start": "eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib) ; echo -n \"plackup location: \" $(which plackup) ; plackup --server Twiggy --port 3000 scripts/long_job_anyevent_01.psgi"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": "13"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/perl-example-psgi"
+  },
+  "license": "MIT",
+  "keywords": [
+    "perl",
+    "glitch",
+    "Plack",
+    "Twiggy",
+    "psgi"
+  ]
+}

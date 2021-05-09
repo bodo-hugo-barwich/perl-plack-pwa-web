@@ -1,0 +1,7 @@
+#Production Environment
+.glitchdotcom.json
+.node-gyp
+node_modules
+
+#Project Files
+.project
