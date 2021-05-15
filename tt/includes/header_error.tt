@@ -1,0 +1,6 @@
+<html>
+<head>
+  <title>[% pagetitle %] [% statuscode %]: [% errormessage %]</title>
+  <link rel="stylesheet" href="[% vmainpath %]css/style.css">
+</head>
+<body>
