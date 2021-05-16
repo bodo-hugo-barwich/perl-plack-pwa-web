@@ -1,20 +1,23 @@
-# [How to build a PWA from scratch with HTML, CSS, and JavaScript](https://www.ibrahima-ndaw.com/blog/how-to-build-pwa-with-javascript/)
+# NAME
 
-Progressive web apps are a way to bring that native app feeling to a traditional web app. With PWAs we can enhance our website with mobile app features which increase usability and offer a great user experience.
-In this article, we are going to build a PWA from scratch with HTML, CSS, and JavaScript. Here are the topics we'll cover:
-- What is a Progressive Web App ?
-- Markup
-- Styling
-- Show data with JavaScript
-- Web App Manifest
-- What is a Service Worker?
-- Cache the assets
-- Fetch the assets
-- Register the Service Worker
-- Final thoughts
-- Next steps
+Plack Twiggy PWA
 
-[Continue reading](https://www.ibrahima-ndaw.com/blog/how-to-build-pwa-with-javascript/)
+# DESCRIPTION
 
-You can check it out live [here](https://devcoffee-pwa.netlify.com/).
+The Objective of this development is the Exercise of modern web technologies (Progressive Web Apps) with `Perl Plack`
+on a non-blocking `Twiggy` Web Server.
 
+The inspiration of the Product and the `JavaScript` base were taken from the tutorial
+[How to build a PWA from scratch](https://github.com/ibrahima92/pwa-with-vanilla-js)
+
+# REQUIREMENTS
+
+To rebuild this web site the **Minimum Requirements** are to have _Perl_ and `cpanminus` installed.
+The site uses the libraries `Plack`, `Twiggy` and `Template Toolkit`.
+The `Twiggy` Web Server requires the `AnyEvent` library.
+
+# INSTALLATION
+
+- cpanminus
+
+    The `cpanm` Script will install the dependencies on local user level as they are found in the `cpanfile`.

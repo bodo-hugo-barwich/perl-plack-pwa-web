@@ -1,0 +1,27 @@
+=head1 NAME
+
+Plack Twiggy PWA
+
+=head1 DESCRIPTION
+
+The Objective of this development is the Exercise of modern web technologies (Progressive Web Apps) with C<Perl Plack>
+on a non-blocking C<Twiggy> Web Server.
+
+The inspiration of the Product and the C<JavaScript> base were taken from the tutorial
+L<How to build a PWA from scratch|https://github.com/ibrahima92/pwa-with-vanilla-js>
+
+=head1 REQUIREMENTS
+
+To rebuild this web site the B<Minimum Requirements> are to have I<Perl> and C<cpanminus> installed.
+The site uses the libraries C<Plack>, C<Twiggy> and C<Template Toolkit>.
+The C<Twiggy> Web Server requires the C<AnyEvent> library.
+
+=head1 INSTALLATION
+
+=over
+
+=item cpanminus
+
+The C<cpanm> Script will install the dependencies on local user level as they are found in the C<cpanfile>.
+
+=back

@@ -1,0 +1,4 @@
+<h1>Error [% statuscode %]: [% errormessage %]</h1>
+<p>
+	[% errordescription %]
+</p>
