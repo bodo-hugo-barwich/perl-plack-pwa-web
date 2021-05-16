@@ -5,6 +5,8 @@ node_modules
 
 #Installation Logs
 .cpanm
+blib
+perl5
 
 #Project Files
 .project
