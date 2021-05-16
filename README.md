@@ -10,7 +10,7 @@ on a non-blocking `Twiggy` Web Server.
 The inspiration of the Product and the `JavaScript` base were taken from the tutorial:
 [How to build a PWA from scratch](https://github.com/ibrahima92/pwa-with-vanilla-js)
 
-The running Version is hosted at _Glitch_ on:
+The running Version is hosted on _Glitch_ at:
 [Plack Twiggy PWA](https://plack-twiggy-pwa.glitch.me/)
 
 # REQUIREMENTS
