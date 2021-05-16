@@ -7,8 +7,11 @@ Plack Twiggy PWA
 The Objective of this development is the Exercise of modern web technologies (Progressive Web Apps) with C<Perl Plack>
 on a non-blocking C<Twiggy> Web Server.
 
-The inspiration of the Product and the C<JavaScript> base were taken from the tutorial
+The inspiration of the Product and the C<JavaScript> base were taken from the tutorial:
 L<How to build a PWA from scratch|https://github.com/ibrahima92/pwa-with-vanilla-js>
+
+The running Version is hosted at I<Glitch> on:
+L<Plack Twiggy PWA|https://plack-twiggy-pwa.glitch.me/>
 
 =head1 REQUIREMENTS
 
@@ -23,5 +26,8 @@ The C<Twiggy> Web Server requires the C<AnyEvent> library.
 =item cpanminus
 
 The C<cpanm> Script will install the dependencies on local user level as they are found in the C<cpanfile>.
+To run the installation call the C<cpanm> Command within the project directory:
+
+	cpanm -vn --installdeps .
 
 =back
