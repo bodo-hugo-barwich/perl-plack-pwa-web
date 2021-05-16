@@ -11,7 +11,12 @@ on:
 jobs:
   repo-sync:
     runs-on: ubuntu-latest
-    steps:
+    steps:        
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Check out the Required Branch
+      uses: actions/checkout@v2
+
+    # Synchronize the Branch with the Glitch Repository
     - name: repo-sync
       uses: wei/git-sync@v1
       env:
