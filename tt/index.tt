@@ -1,4 +1,15 @@
-<h1>Hello World!!</h1>
-<p>
-	Plack Twiggy is greeting you!
-</p>
+<main>
+  <nav>
+    <h1>[% projectname %]</h1>
+    <ul>
+      <li>Home</li>
+      <li>About</li>
+      <li>Blog</li>
+    </ul>
+  </nav>
+  <p>
+
+  </p>
+  <div class="container"></div>
+</main>
+<script src="[% vmainpath %]js/app.js"></script>

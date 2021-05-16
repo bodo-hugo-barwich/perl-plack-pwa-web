@@ -60,7 +60,8 @@ my $app = sub {
 	#------------------------
 	#Parse the URL
 
-  if($request->path_info() eq '/')
+  if($request->path_info() eq '/'
+    || $request->path_info() eq '/index.html')
   {
     #------------------------
     #Index Page
@@ -69,7 +70,8 @@ my $app = sub {
       my $writer = (my $responder = shift)->(
         [ 200, [ 'Content-Type', 'text/html' ]]);
       my $watcher;
-      my $rhshtmpldata = {'pagetitle' => 'Plack Twiggy - Hello'
+      my $rhshtmpldata = {'pagetitle' => 'Plack Twiggy PWA'
+        , 'projectname' => 'Plack Twiggy PWA'
         , 'vmainpath' => $svmainpath
       };
 
@@ -110,6 +112,58 @@ my $app = sub {
       after => 0,
       cb => sub {
         $cb->(scalar localtime);
+        undef $watcher; # cancel circular-ref
+      });
+
+    };
+  }
+  elsif($request->path_info() eq '/manifest')
+  {
+    #------------------------
+    #Manifest Page
+
+    return sub {
+      my $writer = (my $responder = shift)->(
+        [ 200, [ 'Content-Type', 'application/json' ]]);
+      my $watcher;
+      my $rhshtmpldata = {'projectname' => 'Plack Twiggy PWA'
+        , 'projectcodename' => 'PlackPWA'
+        , 'vmainpath' => $svmainpath
+      };
+
+      my $cb = sub {
+        #------------------------
+        #HTML Render Callback
+
+        my $message = shift;
+        my $rsout = undef;
+
+
+        eval
+        {
+          #Render the Template
+          $rsout = render_template($webroot, 'manifest', $rhshtmpldata);
+        };
+
+        if($@)
+        {
+          $rsout = undef;
+        }
+
+        if(defined $rsout)
+        {
+          #Print the rendered HTML
+          $writer->write($$rsout);
+        }
+
+        $writer->close;
+
+      };  #$cb
+
+     $watcher = AnyEvent->timer(
+      after => 0,
+      cb => sub {
+        $cb->();
         undef $watcher; # cancel circular-ref
       });
 

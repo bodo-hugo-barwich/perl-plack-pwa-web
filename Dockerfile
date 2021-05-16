@@ -19,4 +19,4 @@ USER pwa1_web
 WORKDIR /home/plack-pwa
 RUN mkdir -p /home/plack-pwa/log
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["plackup", "--server", "Twiggy", "--port", "3000", "scripts/index.psgi"]
+CMD ["plackup", "--server", "Twiggy", "--port", "3000", "scripts/web.psgi"]
