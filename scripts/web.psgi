@@ -14,7 +14,7 @@ use Template;
 #Auxiliary Functions
 
 
-sub render_template
+sub render_template_html
 {
   my ($webroot, $smodulename, $rvars) = @_;
   my $pageheader = "includes/header_${smodulename}.tt";
@@ -42,6 +42,30 @@ sub render_template
 
   return \$out
 }
+
+sub render_template_headless
+{
+  my ($webroot, $smodulename, $rvars) = @_;
+
+
+  my $tt = Template->new(
+    INCLUDE_PATH => "${webroot}/tt",
+    INTERPOLATE  => 1,
+    POST_CHOMP   => 1,
+    EVAL_PERL    => 1,
+    #START_TAG    => '<%',
+    #END_TAG      => '%>',
+  );
+  my $out;
+
+
+  $tt->process( "${smodulename}.tt", $rvars, \$out )
+    || die $tt->error();
+
+
+  return \$out
+}
+
 
 
 
@@ -85,8 +109,8 @@ my $app = sub {
 
         eval
         {
-          #Render the Template
-          $rsout = render_template($webroot, 'index', $rhshtmpldata);
+          #Render the HTML Template
+          $rsout = render_template_html($webroot, 'index', $rhshtmpldata);
         };
 
         if($@)
@@ -142,7 +166,7 @@ my $app = sub {
         eval
         {
           #Render the Template
-          $rsout = render_template($webroot, 'manifest', $rhshtmpldata);
+          $rsout = render_template_headless($webroot, 'manifest', $rhshtmpldata);
         };
 
         if($@)
@@ -197,8 +221,8 @@ my $app = sub {
 
       eval
       {
-        #Render the Template
-        $rsout = render_template($webroot, 'error', $rhshtmpldata);
+        #Render the HTML Template
+        $rsout = render_template_html($webroot, 'error', $rhshtmpldata);
       };
 
       if($@)

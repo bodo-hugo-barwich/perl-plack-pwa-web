@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="[% vmainpath %]css/style.css">
-  <link rel="manifest" href="[% vmainpath %]manifest.json">
+  <link rel="manifest" href="[% vmainpath %]manifest">
   <!-- ios support -->
   <link rel="apple-touch-icon" href="[% vmainpath %]images/icons/icon-72x72.png">
   <link rel="apple-touch-icon" href="[% vmainpath %]images/icons/icon-96x96.png">
