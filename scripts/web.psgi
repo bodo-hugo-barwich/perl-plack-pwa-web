@@ -159,7 +159,6 @@ my $app = sub {
         #------------------------
         #HTML Render Callback
 
-        my $message = shift;
         my $rsout = undef;
 
 
@@ -167,6 +166,54 @@ my $app = sub {
         {
           #Render the Template
           $rsout = render_template_headless($webroot, 'manifest', $rhshtmpldata);
+        };
+
+        if($@)
+        {
+          $rsout = undef;
+        }
+
+        if(defined $rsout)
+        {
+          #Print the rendered HTML
+          $writer->write($$rsout);
+        }
+
+        $writer->close;
+
+      };  #$cb
+
+     $watcher = AnyEvent->timer(
+      after => 0,
+      cb => sub {
+        $cb->();
+        undef $watcher; # cancel circular-ref
+      });
+
+    };
+  }
+  elsif($request->path_info() eq '/service-worker')
+  {
+    #------------------------
+    #Service Worker Script
+
+    return sub {
+      my $writer = (my $responder = shift)->(
+        [ 200, [ 'Content-Type', 'text/javascript' ]]);
+      my $watcher;
+      my $rhshtmpldata = {'vmainpath' => $svmainpath};
+
+      my $cb = sub {
+        #------------------------
+        #HTML Render Callback
+
+        my $rsout = undef;
+
+
+        eval
+        {
+          #Render the Template
+          $rsout = render_template_headless($webroot, 'service-worker', $rhshtmpldata);
         };
 
         if($@)
