@@ -1,11 +1,11 @@
 {
-  "name": "hello-perl-psgi",
+  "name": "plack-twiggy-pwa",
   "version": "0.0.1",
-  "description": "A simple Perl PSGI example application",
-  "main": "scripts/long_job_anyevent_01.psgi",
+  "description": "A Plack Application as PWA running on a Twiggy Web Server",
+  "main": "scripts/web.psgi",
   "scripts": {
     "build": "mkdir -p ~/bin && curl -L https://cpanmin.us/ -o ~/bin/cpanm && chmod +x ~/bin/cpanm && cpanm --local-lib=~/perl5 local::lib && eval $(perl -Mlocal::lib -I ~/perl5/lib/perl5/) && cpanm -vn --installdeps . ",
-    "start": "mkdir -p ~/bin && curl -L https://cpanmin.us/ -o ~/bin/cpanm && chmod +x ~/bin/cpanm && cpanm --local-lib=~/perl5 local::lib && eval $(perl -Mlocal::lib -I ~/perl5/lib/perl5/) && cpanm -vn --installdeps . ; echo -n \"plackup location: \" $(which plackup) ; plackup --server Twiggy --port 3000 scripts/web.psgi"
+    "start": "mkdir -p ~/bin && curl -L https://cpanmin.us/ -o ~/bin/cpanm && chmod +x ~/bin/cpanm && cpanm --local-lib=~/perl5 local::lib && eval $(perl -Mlocal::lib -I ~/perl5/lib/perl5/) && cpanm -vn --installdeps . ; plackup --server Twiggy --port 3000 scripts/web.psgi"
   },
   "dependencies": {},
   "engines": {
@@ -16,9 +16,9 @@
   },
   "license": "MIT",
   "keywords": [
-    "perl",
     "glitch",
+    "perl",
     "Plack",
-    "psgi"
+    "Twiggy"
   ]
 }
