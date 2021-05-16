@@ -39,26 +39,41 @@ h1 {
 .container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  grid-gap: 1rem;
+  grid-gap: 2rem;
   justify-content: center;
   align-items: center;
   margin: auto;
-  padding: 1rem 0;
+  padding: 1rem;
 }
-.card {
+.card-list {
   display: flex;
   align-items: center;
   flex-direction: column;
-  width: 15rem auto;
-  height: 15rem;
+  width: 16rem;
+  height: 100%;
   background: #fff;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   border-radius: 10px;
   margin: auto;
+  padding: 15px;
   overflow: hidden;
 }
 
-.card--avatar {
+.card-detail {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 32rem;
+  height: 100%;
+  background: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  border-radius: 10px;
+  margin: auto;
+  padding: 15px;
+  overflow: hidden;
+}
+
+.card-image {
   width: 100%;
   height: 10rem;
   object-fit: cover;
