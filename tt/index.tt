@@ -10,6 +10,70 @@
   <p>
 
   </p>
+  <div id="notification" hidden></div>
+  <div id="update" class="update" hidden><a href="#" id="update-link" class="card--link">Update</a></div>
   <div class="container"></div>
+  <div id="workermessage"></div>
+  <div id="version">Version: '<span id="versionnumber"></span>'</div>
 </main>
+    <script>
+const svmainpath = '[% vmainpath %]';
+
+const container = document.querySelector(".container");
+const notification = document.querySelector("#notification");
+const updatebox = document.querySelector("#update");
+const updatelink = document.querySelector("#update-link");
+const messagebox = document.querySelector("#workermessage");
+const vernobox = document.querySelector("#versionnumber");
+
+var sversion = '';
+
+var coffees = [
+  {
+    name: "Perspiciatis",
+    image: svmainpath + "images/coffee1.jpg"
+  },
+  {
+    name: "Voluptatem",
+    image: svmainpath + "images/coffee2.jpg"
+  },
+  {
+    name: "Explicabo",
+    image: svmainpath + "images/coffee3.jpg"
+  },
+  {
+    name: "Rechitecto",
+    image: svmainpath + "images/coffee4.jpg"
+  },
+  {
+    name: "Beatae",
+    image: svmainpath + "images/coffee5.jpg"
+  },
+  {
+    name: "Vitae",
+    image: svmainpath + "images/coffee6.jpg"
+  },
+  {
+    name: "Inventore",
+    image: svmainpath + "images/coffee7.jpg"
+  },
+  {
+    name: "Veritatis",
+    image: svmainpath + "images/coffee8.jpg"
+  },
+  {
+    name: "Accusantium",
+    image: svmainpath + "images/coffee9.jpg"
+  }
+];
+/*undefined;*/
+</script>
+<script src="[% vmainpath %]js/home.js"></script>
 <script src="[% vmainpath %]js/app.js"></script>
+<script type="text/javascript">
+if(typeof updatelink !== 'undefined')
+{
+  updatelink.onclick = updateWindow;
+}
+</script>
+
