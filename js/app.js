@@ -25,7 +25,7 @@
 
 function registeredServiceWorker(registration)
 {
-  console.log('Service worker registration succeeded:', registration);
+  console.log('ServiceWorker registration succeeded:', registration);
 
   //Successful Registration
   if(registration)
@@ -37,7 +37,7 @@ function registeredServiceWorker(registration)
   //Listen on Messages from the Service Worker
   navigator.serviceWorker.addEventListener('message', event => showWorkerMessage(event));
 
-  console.log('Service Worker installed 1:', registration);
+  console.log('ServiceWorker installed 1:', registration);
 
 
   return registration;
@@ -73,46 +73,6 @@ function doSkipWaiting(registration)
   } //if(registration)
 }
 
-function doCheckUpdate(registration)
-{
-  bupdok = false;
-
-  console.log('doCheckUpdate - go ...');
-  console.log('doCheckUpdate - ServiceWorkerRegistration: ', registration);
-
-  if(registration)
-  {
-    console.log('Update - registration.installing (' + typeof registration.installing + '): ', (registration.installing));
-    console.log('Update - registration.waiting (' + typeof registration.waiting + '): ', (registration.waiting));
-
-    if(registration.installing != null
-      || registration.waiting != null)
-    {
-      bupdok = true;
-    }
-    else
-    {
-      console.log('Update: No Update waiting.');
-    }
-  } //if(registration)
-
-  if(bupdok)
-  {
-    console.log('Service Worker Update detected!');
-
-    if(typeof notification !== 'undefined')
-    {
-      notification.innerHTML = '<b>Service Worker Update detected!</b>';
-      notification.hidden = false;
-    }
-
-    if(typeof updatebox !== 'undefined')
-    {
-      updatebox.hidden = false;
-    }
-  } //if(bupdok)
-}
-
 function doCheckVersion(registration)
 {
   var worker = null;
@@ -123,8 +83,8 @@ function doCheckVersion(registration)
 
   if(registration)
   {
-    console.log('Version - registration.active (' + typeof registration.active + '): ', (registration.active));
-    console.log('Version - registration.installing (' + typeof registration.installing + '): ', (registration.installing));
+    console.log('doCheckVersion - registration.active (' + typeof registration.active + '): ', (registration.active));
+    console.log('doCheckVersion - registration.installing (' + typeof registration.installing + '): ', (registration.installing));
 
     worker = registration.active;
 
@@ -157,6 +117,61 @@ function doCheckVersion(registration)
       console.log('doCheckVersion - error: no controller');
     } //if(navigator.serviceWorker.controller)
   } //if(worker != null)
+
+
+  return registration;
+}
+
+function doCheckUpdate(registration)
+{
+  var bregok = false;
+  var bupdok = false;
+
+  console.log('doCheckUpdate - go ...');
+  console.log('doCheckUpdate - ServiceWorkerRegistration: ', registration);
+
+  if(registration)
+  {
+    console.log('doCheckUpdate - registration.active (' + typeof registration.active + '): ', (registration.active));
+
+	if(registration.active != null)
+	{
+	  bregok = true;
+	}
+
+    console.log('doCheckUpdate - registration.installing (' + typeof registration.installing + '): ', (registration.installing));
+    console.log('doCheckUpdate - registration.waiting (' + typeof registration.waiting + '): ', (registration.waiting));
+
+    if(registration.installing != null
+      || registration.waiting != null)
+    {
+      bupdok = true;
+    }
+    else
+    {
+      console.log('Update: No Update waiting.');
+    }
+  } //if(registration)
+
+  if(bregok
+	&& bupdok)
+  {
+    console.log('Service Worker Update detected!');
+
+    if(typeof notification !== 'undefined')
+    {
+      notification.innerHTML = '<b>Service Worker Update detected!</b>';
+      notification.hidden = false;
+    }
+
+    if(typeof updatebox !== 'undefined')
+    {
+      updatebox.hidden = false;
+    }
+  } //if(bregok && bupdok)
+
+
+  return registration;
 }
 
 function updatedServiceWorker(updateevent)
@@ -298,6 +313,7 @@ if ("serviceWorker" in navigator)
       //Pass the ServiceWorkerRegistration instance
       .then(reg => registeredServiceWorker(reg))
       .then(reg => doCheckVersion(reg))
+      .then(reg => doCheckUpdate(reg))
       .catch(err => console.log("service worker not registered", err));
 
   });
