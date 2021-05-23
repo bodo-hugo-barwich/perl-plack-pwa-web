@@ -23,7 +23,8 @@ function showCoffees()
                 <div class="card-list">
                   <img class="card-image" src=${image} />
                   <h1 class="card--title">${name}</h1>
-                  <a class="card--link" href="${svmainpath}coffee/${link_name}">Taste</a>
+				  <!-- ${svmainpath}coffee/${link_name} -->
+                  <a class="card--link" href="#">Taste</a>
                 </div>
                 `)
     );

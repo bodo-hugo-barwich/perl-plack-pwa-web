@@ -31,38 +31,47 @@ var sversion = '';
 var coffees = [
   {
     name: "Perspiciatis",
+    link_name: 'perspiciatis',
     image: svmainpath + "images/coffee1.jpg"
   },
   {
     name: "Voluptatem",
+    link_name: 'voluptatem',
     image: svmainpath + "images/coffee2.jpg"
   },
   {
     name: "Explicabo",
+    link_name: 'explicabo',
     image: svmainpath + "images/coffee3.jpg"
   },
   {
     name: "Rechitecto",
+    link_name: 'rechitecto',
     image: svmainpath + "images/coffee4.jpg"
   },
   {
     name: "Beatae",
+    link_name: 'beatae',
     image: svmainpath + "images/coffee5.jpg"
   },
   {
     name: "Vitae",
+    link_name: 'vitae',
     image: svmainpath + "images/coffee6.jpg"
   },
   {
     name: "Inventore",
+    link_name: 'inventore',
     image: svmainpath + "images/coffee7.jpg"
   },
   {
     name: "Veritatis",
+    link_name: 'veritatis',
     image: svmainpath + "images/coffee8.jpg"
   },
   {
     name: "Accusantium",
+    link_name: 'accusantium',
     image: svmainpath + "images/coffee9.jpg"
   }
 ];
