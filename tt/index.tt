@@ -10,7 +10,7 @@
   <p>
 
   </p>
-  <div id="notification" hidden></div>
+  <div id="notification" class="notification-message" hidden></div>
   <div id="update" class="update" hidden><a href="#" id="update-link" class="card--link">Update</a></div>
   <div class="container"></div>
   <div id="workermessage"></div>

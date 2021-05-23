@@ -36,6 +36,12 @@ h1 {
   color: #e74c3c;
   margin-bottom: 0.5rem;
 }
+
+h3
+{
+  margin-bottom: 0.5rem;
+}
+
 .container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
@@ -93,4 +99,9 @@ h1 {
   color: #fff;
   padding: 0.3rem 1rem;
   border-radius: 20px;
+}
+
+.notification-message
+{
+  padding: 0.5rem;
 }

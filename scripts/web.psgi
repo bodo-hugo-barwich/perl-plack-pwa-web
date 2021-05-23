@@ -201,7 +201,7 @@ my $app = sub {
       my $writer = (my $responder = shift)->(
         [ 200, [ 'Content-Type', 'text/javascript' ]]);
       my $watcher;
-      my $rhshtmpldata = {'sversion' => '0.0.1', 'vmainpath' => $svmainpath};
+      my $rhshtmpldata = {'sversion' => '0.0.0', 'vmainpath' => $svmainpath};
 
       my $cb = sub {
         #------------------------
