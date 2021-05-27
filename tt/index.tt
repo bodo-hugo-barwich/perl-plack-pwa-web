@@ -10,6 +10,79 @@
   <p>
 
   </p>
+  <div id="notification" class="notification-message" hidden></div>
+  <div id="update" class="update" hidden><a href="#" id="update-link" class="card--link">Update</a></div>
   <div class="container"></div>
+  <div id="workermessage"></div>
+  <div id="version">Version: '<span id="versionnumber"></span>'</div>
 </main>
+    <script>
+const svmainpath = '[% vmainpath %]';
+
+const container = document.querySelector(".container");
+const notification = document.querySelector("#notification");
+const updatebox = document.querySelector("#update");
+const updatelink = document.querySelector("#update-link");
+const messagebox = document.querySelector("#workermessage");
+const vernobox = document.querySelector("#versionnumber");
+
+var sversion = '';
+
+var coffees = [
+  {
+    name: "Perspiciatis",
+    link_name: 'perspiciatis',
+    image: svmainpath + "images/coffee1.jpg"
+  },
+  {
+    name: "Voluptatem",
+    link_name: 'voluptatem',
+    image: svmainpath + "images/coffee2.jpg"
+  },
+  {
+    name: "Explicabo",
+    link_name: 'explicabo',
+    image: svmainpath + "images/coffee3.jpg"
+  },
+  {
+    name: "Rechitecto",
+    link_name: 'rechitecto',
+    image: svmainpath + "images/coffee4.jpg"
+  },
+  {
+    name: "Beatae",
+    link_name: 'beatae',
+    image: svmainpath + "images/coffee5.jpg"
+  },
+  {
+    name: "Vitae",
+    link_name: 'vitae',
+    image: svmainpath + "images/coffee6.jpg"
+  },
+  {
+    name: "Inventore",
+    link_name: 'inventore',
+    image: svmainpath + "images/coffee7.jpg"
+  },
+  {
+    name: "Veritatis",
+    link_name: 'veritatis',
+    image: svmainpath + "images/coffee8.jpg"
+  },
+  {
+    name: "Accusantium",
+    link_name: 'accusantium',
+    image: svmainpath + "images/coffee9.jpg"
+  }
+];
+/*undefined;*/
+</script>
+<script src="[% vmainpath %]js/home.js"></script>
 <script src="[% vmainpath %]js/app.js"></script>
+<script type="text/javascript">
+if(typeof updatelink !== 'undefined')
+{
+  updatelink.onclick = updateWindow;
+}
+</script>
+

@@ -1,8 +1,8 @@
-const staticDevCoffee = "dev-coffee-site-v1";
 const assets = [
   "[% vmainpath %]",
   "[% vmainpath %]index.html",
   "[% vmainpath %]css/style.css",
+  "[% vmainpath %]js/home.js",
   "[% vmainpath %]js/app.js",
   "[% vmainpath %]images/coffee1.jpg",
   "[% vmainpath %]images/coffee2.jpg",
@@ -15,7 +15,15 @@ const assets = [
   "[% vmainpath %]images/coffee9.jpg"
 ];
 
+var sversion = "[% sversion %]";
+var staticDevCoffee = "dev-coffee-site-" + sversion;
+
+
+
 self.addEventListener("install", installEvent => {
+  console.log('Attempting to install service worker and cache static assets');
+  console.log(`Cache '${staticDevCoffee}': building ...`);
+
   installEvent.waitUntil(
     caches.open(staticDevCoffee).then(cache => {
       cache.addAll(assets);
@@ -23,10 +31,95 @@ self.addEventListener("install", installEvent => {
   );
 });
 
+self.addEventListener('activate', e => {
+  console.log('Service Worker starting ...');
+  console.log(`Cache '${staticDevCoffee}': cleaning ...`);
+
+  e.waitUntil(
+    caches.keys().then(keyList => {
+      return Promise.all(keyList.map(key => {
+        if (key !== staticDevCoffee) {
+          //console.log(`Cache '${staticDevCoffee}': deleting ...`);
+          return caches.delete(key);
+        }
+      }));
+    }));
+  return self.clients.claim();
+});
+
 self.addEventListener("fetch", fetchEvent => {
+  console.log("Cache URL '" + fetchEvent.request.url + "': fetching ...");
   fetchEvent.respondWith(
     caches.match(fetchEvent.request).then(res => {
       return res || fetch(fetchEvent.request);
     })
   );
 });
+
+self.addEventListener("push", event => {
+  let message = event.data.json();
+
+  console.log("Push Event - Data: '" + event.data.json() + "'");
+
+  switch(message.type) {
+    case "init":
+      doInit();
+      break;
+    case "shutdown":
+      doShutdown();
+      break;
+  }
+}, false);
+
+self.addEventListener('message', (event) => {
+  console.log("Got Message: ", event);
+
+  if(event.data === 'SKIP_WAITING')
+  {
+    //------------------------
+    //SkipWaiting() Notification
+
+    self.skipWaiting();
+
+    //await clients.claim();
+  }
+  else if(event.data === 'VERSION')
+  {
+    //------------------------
+    //Version Request
+
+    var rqcln = null;
+    var lstcln = null;
+    var rqid = event.source.id;
+
+
+    console.log(`Client '${rqid}': Version Request`);
+
+    clients.matchAll().then(function(arrclients) {
+      //------------------------
+      //Callback from clients.matchAll()
+
+      //console.log(`Clients (Count: '${arrclients.length}'): `, arrclients);
+
+      for (var i = 0 ; i < arrclients.length ; i++) {
+        lstcln = arrclients[i];
+
+        if(rqid === lstcln.id) {
+          rqcln = lstcln;
+
+          //console.log(`Client(${i}) '${rqid}': `, rqcln);
+
+          rqcln.postMessage({
+            //worker_json: JSON.stringify(self) ,
+            version: sversion
+            , cache: staticDevCoffee
+            , client_id: rqid
+          });
+
+          console.log(`Client '${rqid}': Version Request done.`);
+        } //if(rqid === lstcln.id)
+      } //for (var i = 0 ; i < arrclients.length ; i++)
+    });
+  } //if(event.data === 'SKIP_WAITING')
+});
+
