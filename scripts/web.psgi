@@ -1,3 +1,28 @@
+#!/usr/bin/perl
+
+# @author Bodo (Hugo) Barwich
+# @version 2021-06-05
+# @package Plack Twiggy PWA Web
+# @subpackage /scripts/web.psgi
+
+# This Module creates the callable Function to respond to Plack Requests.
+# This is the Entry Point of the Web Site.
+#
+#---------------------------------
+# Requirements:
+# - The Perl Module "Plack" must be installed
+# - The Perl Module "Twiggy" must be installed
+# - The Perl Module "Template" must be installed
+#
+#---------------------------------
+# Features:
+# - Create ServiceWorker Script from Template
+# - Create PWA Manifest from Template
+# - Render Error Page as HTML
+#
+
+
+
 use warnings;
 use strict;
 
@@ -141,7 +166,7 @@ my $app = sub {
 
     };
   }
-  elsif($request->path_info() eq '/manifest')
+  elsif($request->path_info() eq '/manifest.json')
   {
     #------------------------
     #Manifest Page
@@ -201,7 +226,7 @@ my $app = sub {
       my $writer = (my $responder = shift)->(
         [ 200, [ 'Content-Type', 'text/javascript' ]]);
       my $watcher;
-      my $rhshtmpldata = {'sversion' => '0.0.0', 'vmainpath' => $svmainpath};
+      my $rhshtmpldata = {'sversion' => '0.0.1', 'vmainpath' => $svmainpath};
 
       my $cb = sub {
         #------------------------
