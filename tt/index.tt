@@ -17,6 +17,9 @@
   <div id="version">Version: '<span id="versionnumber"></span>'</div>
 </main>
     <script>
+const api_host = 'https://plack-pwa-api.glitch.me';
+const api_mainpath = '/';
+
 const svmainpath = '[% vmainpath %]';
 
 const container = document.querySelector(".container");
@@ -28,7 +31,9 @@ const vernobox = document.querySelector("#versionnumber");
 
 var sversion = '';
 
-var coffees = [
+var coffees = undefined;
+/*
+[
   {
     name: "Perspiciatis",
     link_name: 'perspiciatis',
@@ -75,8 +80,9 @@ var coffees = [
     image: svmainpath + "images/coffee9.jpg"
   }
 ];
-/*undefined;*/
+*/
 </script>
+<script src="[% vmainpath %]js/api.js"></script>
 <script src="[% vmainpath %]js/home.js"></script>
 <script src="[% vmainpath %]js/app.js"></script>
 <script type="text/javascript">

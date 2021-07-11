@@ -1,0 +1,94 @@
+/**
+ * @version 2021-07-11
+ * @package PWA Content Loader
+ * @subpackage api.js
+ */
+
+/**
+ * This Library provides Functions to load the Content from the API
+ */
+
+
+function fetchCoffees()
+{
+  console.log("Coffees: fetching ..."); // response is the server response
+
+  // 1. Create a new XMLHttpRequest object
+  let xhr = new XMLHttpRequest();
+
+  // 2. Configure it: GET-request for the URL /article/.../load
+  xhr.open('GET', api_host + api_mainpath + 'coffees');
+
+  xhr.responseType = 'json';
+
+  // 3. Send the request over the network
+  xhr.send();
+
+  xhr.onprogress = function(event) {
+    if (event.lengthComputable) {
+      console.log(`Coffees: received ${event.loaded} of ${event.total} bytes`);
+    } else {
+      console.log(`Coffees: received ${event.loaded} bytes`); // no Content-Length
+    }
+  };	//xhr.onprogress
+
+  // 4. This will be called after the response is received
+  xhr.onload = function() {
+    if (xhr.status != 200) { // analyze HTTP status of the response
+      console.log(`Coffees: Fetch failed with Error [${xhr.status}]: '${xhr.statusText}'`); // e.g. 404: Not Found
+    } else { // show the result
+      console.log(`Coffees: fetched, got '${xhr.response.length}' Entries.`); // response is the server response
+
+      coffees = xhr.response;
+
+      console.log("Coffees: updating ..."); // response is the server response
+
+      showCoffees();
+
+      console.log("Coffees: update done.");
+    }
+  };	//xhr.onload
+}
+
+function fetchCoffee(link_name)
+{
+  console.log("Coffee: fetching ..."); // response is the server response
+
+  // 1. Create a new XMLHttpRequest object
+  let xhr = new XMLHttpRequest();
+
+  // 2. Configure it: GET-request for the URL /article/.../load
+  xhr.open('GET', api_host + api_mainpath + 'coffee/' + link_name);
+
+  xhr.responseType = 'json';
+
+  // 3. Send the request over the network
+  xhr.send();
+
+  xhr.onprogress = function(event) {
+    if (event.lengthComputable) {
+      console.log(`Coffee: received '${event.loaded}' of '${event.total}' Bytes`);
+    } else {
+      console.log(`Coffee: received '${event.loaded}' Bytes`); // no Content-Length
+    }
+  };	//xhr.onprogress
+
+  // 4. This will be called after the response is received
+  xhr.onload = function() {
+    if (xhr.status != 200) { // analyze HTTP status of the response
+      console.log(`Coffee: Fetch failed with Error [${xhr.status}]: '${xhr.statusText}'`); // e.g. 404: Not Found
+    } else { // show the result
+      console.log(`Coffee: fetched, got '${xhr.response.length}' Entries.`); // response is the server response
+
+      coffee = xhr.response;
+
+      console.log("Coffee: updating ..."); // response is the server response
+
+      showCoffee();
+
+      console.log("Coffee: update done.");
+    }
+  };	//xhr.onload
+}
+
+

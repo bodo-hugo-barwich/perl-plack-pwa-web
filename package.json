@@ -12,13 +12,14 @@
     "node": 13
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/perl-example-psgi"
+    "url": "https://glitch.com/edit/#!/plack-twiggy-pwa"
   },
   "license": "MIT",
   "keywords": [
     "glitch",
     "perl",
     "Plack",
-    "Twiggy"
+    "Twiggy",
+	"TemplateToolkit"
   ]
 }
