@@ -12,7 +12,7 @@
   </p>
   <div id="notification" class="notification-message" hidden></div>
   <div id="update" class="update" hidden><a href="#" id="update-link" class="card--link">Update</a></div>
-  <div class="container"></div>
+  <div id="productlistbox" class="container"></div>
   <div id="workermessage"></div>
   <div id="version">Version: '<span id="versionnumber"></span>'</div>
 </main>
@@ -22,7 +22,7 @@ const api_mainpath = '/';
 
 const svmainpath = '[% vmainpath %]';
 
-const container = document.querySelector(".container");
+const bxproducts = document.querySelector("#productlistbox");
 const notification = document.querySelector("#notification");
 const updatebox = document.querySelector("#update");
 const updatelink = document.querySelector("#update-link");
@@ -31,7 +31,7 @@ const vernobox = document.querySelector("#versionnumber");
 
 var sversion = '';
 
-var coffees = undefined;
+var lstproducts = undefined;
 /*
 [
   {

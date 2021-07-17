@@ -14,44 +14,47 @@
  */
 
 
-function showCoffees()
+function showProductList(bxdisplay, lstcontents)
 {
   let output = "Coffes: showing ...";
 
-  if(typeof coffees !== 'undefined')
+  if(typeof bxdisplay !== 'undefined')
   {
-	var arrcoffees = Object.values(coffees);
+	  if(typeof lstcontents !== 'undefined')
+	  {
+		var arrcoffees = Object.values(lstcontents);
 
 
-    output = "";
+	    output = "";
 
-    for(let coffee of arrcoffees)
-	{
-      output += `<div class="card-list">
-                  <img class="card-image" src="${svmainpath}images/${coffee.image}"" />
-                  <h3 class="card--title">${coffee.name}</h3>
-				  <!-- ${svmainpath}coffee/${coffee.link_name} -->
-                  <a class="card--link" href="#">See Recipe</a>
-                </div>
-                `;
-	}	//for(let coffee of arrcoffees)
-  }
-  else	//Product Data empty
-  {
-    console.log("Coffees: No Data");
-  } //if(typeof coffees !== 'undefined')
+	    for(let coffee of arrcoffees)
+		{
+	      output += `<div class="card-list">
+	                  <img class="card-image" src="${svmainpath}images/${coffee.image}"" />
+	                  <h3 class="card--title">${coffee.name}</h3>
+					  <!-- ${svmainpath}coffee/${coffee.link_name} -->
+	                  <a class="card--link" href="#">See Recipe</a>
+	                </div>
+	                `;
+		}	//for(let coffee of arrcoffees)
+	  }
+	  else	//Product Data empty
+	  {
+	    console.log("Coffees: No Data");
+	  } //if(typeof lstcontents !== 'undefined')
 
-  container.innerHTML = output;
+	  bxdisplay.innerHTML = output;
+  }	//if(typeof bxdisplay !== 'undefined')
 };
 
 
-function initPage()
+function initPage(bxdisplay, lstcontents)
 {
-  showCoffees();
+  showProductList(bxdisplay, lstcontents);
 
   console.log("Coffees: fetch do ...");
 
-  fetchCoffees();
+  fetchProductList(bxdisplay, lstcontents);
 
   console.log("Coffees: update queued.");
 }

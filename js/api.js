@@ -9,7 +9,7 @@
  */
 
 
-function fetchCoffees()
+function fetchProductList(bxdisplay, lstcontents)
 {
   console.log("Coffees: fetching ..."); // response is the server response
 
@@ -39,18 +39,18 @@ function fetchCoffees()
     } else { // show the result
       console.log(`Coffees: fetched, got '${xhr.response.length}' Entries.`); // response is the server response
 
-      coffees = xhr.response;
+      lstcontents = xhr.response;
 
       console.log("Coffees: updating ..."); // response is the server response
 
-      showCoffees();
+      showProductList(bxdisplay, lstcontents);
 
       console.log("Coffees: update done.");
     }
   };	//xhr.onload
 }
 
-function fetchCoffee(link_name)
+function fetchCoffee(bxdisplay, link_name)
 {
   console.log("Coffee: fetching ..."); // response is the server response
 
@@ -84,7 +84,7 @@ function fetchCoffee(link_name)
 
       console.log("Coffee: updating ..."); // response is the server response
 
-      showCoffee();
+      showCoffee(bxdisplay, coffee);
 
       console.log("Coffee: update done.");
     }
