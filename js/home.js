@@ -22,13 +22,13 @@ function showProductList(bxdisplay, lstcontents)
   {
 	  if(typeof lstcontents !== 'undefined')
 	  {
-		var arrcoffees = Object.values(lstcontents);
+			var arrcoffees = Object.values(lstcontents);
 
 
 	    output = "";
 
 	    for(let coffee of arrcoffees)
-		{
+			{
 	      output += `<div class="card-list">
 	                  <img class="card-image" src="${svmainpath}images/${coffee.image}"" />
 	                  <h3 class="card--title">${coffee.name}</h3>
@@ -36,7 +36,7 @@ function showProductList(bxdisplay, lstcontents)
 	                  <a class="card--link" href="#">See Recipe</a>
 	                </div>
 	                `;
-		}	//for(let coffee of arrcoffees)
+			}	//for(let coffee of arrcoffees)
 	  }
 	  else	//Product Data empty
 	  {
@@ -45,7 +45,22 @@ function showProductList(bxdisplay, lstcontents)
 
 	  bxdisplay.innerHTML = output;
   }	//if(typeof bxdisplay !== 'undefined')
-};
+}
+
+
+function showFetchError(bxdisplay, serrormessage)
+{
+	if(typeof serrormessage === 'undefined')
+	{
+		serrormessage = 'Coffees: An Error occurred when loading Product List!'
+	}
+
+  if(typeof bxdisplay !== 'undefined')
+  {
+	  bxdisplay.innerHTML = serrormessage;
+  }	//if(typeof bxdisplay !== 'undefined')
+}
+
 
 
 function initPage(bxdisplay, lstcontents)

@@ -36,6 +36,8 @@ function fetchProductList(bxdisplay, lstcontents)
   xhr.onload = function() {
     if (xhr.status != 200) { // analyze HTTP status of the response
       console.log(`Coffees: Fetch failed with Error [${xhr.status}]: '${xhr.statusText}'`); // e.g. 404: Not Found
+
+			showFetchError(bxdisplay, "Coffees: Product List cannot be loaded!");
     } else { // show the result
       console.log(`Coffees: fetched, got '${xhr.response.length}' Entries.`); // response is the server response
 
