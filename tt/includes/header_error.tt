@@ -1,6 +1,7 @@
 <html>
 <head>
   <title>[% pagetitle %] [% statuscode %]: [% errormessage %]</title>
+  <link rel="shortcut icon" type="image/x-icon" href="https://cdn.glitch.com/project-avatar/ecd8dfd3-b95f-4cd6-91a3-5e178a98d2f0.png" />
   <link rel="stylesheet" href="[% vmainpath %]css/style.css">
 </head>
 <body>

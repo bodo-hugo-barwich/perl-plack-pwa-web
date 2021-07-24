@@ -5,8 +5,9 @@
   <title>[% pagetitle %]</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" type="image/x-icon" href="https://cdn.glitch.com/project-avatar/ecd8dfd3-b95f-4cd6-91a3-5e178a98d2f0.png" />
   <link rel="stylesheet" href="[% vmainpath %]css/style.css">
-  <link rel="manifest" href="[% vmainpath %]manifest">
+  <link rel="manifest" href="[% vmainpath %]manifest.json">
   <!-- ios support -->
   <link rel="apple-touch-icon" href="[% vmainpath %]images/icons/icon-72x72.png">
   <link rel="apple-touch-icon" href="[% vmainpath %]images/icons/icon-96x96.png">

@@ -1,8 +1,34 @@
+#!/usr/bin/perl
+
+# @author Bodo (Hugo) Barwich
+# @version 2021-06-05
+# @package Plack Twiggy PWA Web
+# @subpackage /scripts/web.psgi
+
+# This Module creates the callable Function to respond to Plack Requests.
+# This is the Entry Point of the Web Site.
+#
+#---------------------------------
+# Requirements:
+# - The Perl Module "Plack" must be installed
+# - The Perl Module "Twiggy" must be installed
+# - The Perl Module "Template" must be installed
+#
+#---------------------------------
+# Features:
+# - Create ServiceWorker Script from Template
+# - Create PWA Manifest from Template
+# - Render Error Page as HTML
+#
+
+
+
 use warnings;
 use strict;
 
 use Cwd qw(abs_path);
 use File::Basename qw(dirname);
+use Data::Dump qw(dump);
 
 use AnyEvent;
 use Plack::Builder;
@@ -77,7 +103,6 @@ my $svmainpath = '/';
 
 my $app = sub {
   my $env = shift;
-
   my $request = Plack::Request->new($env);
 
 
@@ -91,15 +116,15 @@ my $app = sub {
     #Index Page
 
     return sub {
-      my $writer = (my $responder = shift)->(
-        [ 200, [ 'Content-Type', 'text/html' ]]);
+      my $responder = shift;
+      my $writer = $responder->([ 200, [ 'Content-Type', 'text/html' ]]);
       my $watcher;
       my $rhshtmpldata = {'pagetitle' => 'Plack Twiggy PWA'
         , 'projectname' => 'Plack Twiggy PWA'
         , 'vmainpath' => $svmainpath
       };
 
-      my $cb = sub {
+      my $fwriteIndexPage = sub {
         #------------------------
         #HTML Render Callback
 
@@ -127,7 +152,7 @@ my $app = sub {
         $writer->write("Finishing: $message\n");
         $writer->close;
 
-      };  #$cb
+      };  #$fwriteIndexPage
 
 
      $writer->write("Starting: ${\scalar(localtime)}\n");
@@ -135,27 +160,27 @@ my $app = sub {
      $watcher = AnyEvent->timer(
       after => 0,
       cb => sub {
-        $cb->(scalar localtime);
+        $fwriteIndexPage->(scalar localtime);
         undef $watcher; # cancel circular-ref
       });
 
     };
   }
-  elsif($request->path_info() eq '/manifest')
+  elsif($request->path_info() eq '/manifest.json')
   {
     #------------------------
     #Manifest Page
 
     return sub {
-      my $writer = (my $responder = shift)->(
-        [ 200, [ 'Content-Type', 'application/json' ]]);
+      my $responder = shift;
+      my $writer = $responder->([ 200, [ 'Content-Type', 'application/json' ]]);
       my $watcher;
       my $rhshtmpldata = {'projectname' => 'Plack Twiggy PWA'
         , 'projectcodename' => 'PlackPWA'
         , 'vmainpath' => $svmainpath
       };
 
-      my $cb = sub {
+      my $frwriteManifest = sub {
         #------------------------
         #HTML Render Callback
 
@@ -181,12 +206,12 @@ my $app = sub {
 
         $writer->close;
 
-      };  #$cb
+      };  #$frwriteManifest
 
      $watcher = AnyEvent->timer(
       after => 0,
       cb => sub {
-        $cb->();
+        $frwriteManifest->();
         undef $watcher; # cancel circular-ref
       });
 
@@ -198,12 +223,12 @@ my $app = sub {
     #Service Worker Script
 
     return sub {
-      my $writer = (my $responder = shift)->(
-        [ 200, [ 'Content-Type', 'text/javascript' ]]);
+      my $responder = shift;
+      my $writer = $responder->([ 200, [ 'Content-Type', 'text/javascript' ]]);
       my $watcher;
       my $rhshtmpldata = {'sversion' => '0.0.0', 'vmainpath' => $svmainpath};
 
-      my $cb = sub {
+      my $fwriteServiceWorkerScript = sub {
         #------------------------
         #HTML Render Callback
 
@@ -229,12 +254,12 @@ my $app = sub {
 
         $writer->close;
 
-      };  #$cb
+      };  #$fwriteServiceWorkerScript
 
      $watcher = AnyEvent->timer(
       after => 0,
       cb => sub {
-        $cb->();
+        $fwriteServiceWorkerScript->();
         undef $watcher; # cancel circular-ref
       });
 
@@ -249,8 +274,8 @@ my $app = sub {
     #------------------------
     #Error Page
 
-    my $writer = (my $responder = shift)->(
-      [ 404, [ 'Content-Type', 'text/html' ]]);
+    my $responder = shift;
+    my $writer = $responder->([ 404, [ 'Content-Type', 'text/html' ]]);
     my $watcher;
     my $rhshtmpldata = {'pagetitle' => 'Plack Twiggy - Error'
       , 'vmainpath' => $svmainpath
@@ -259,7 +284,7 @@ my $app = sub {
       , 'errordescription' => 'The Page does not exist.'
     };
 
-    my $cb = sub {
+    my $fwriteErrorPage = sub {
       #------------------------
       #HTML Render Callback
 
@@ -285,18 +310,18 @@ my $app = sub {
 
       $writer->close;
 
-    };  #$cb
+    };  #$fwriteErrorPage
 
 
    $watcher = AnyEvent->timer(
     after => 0,
     cb => sub {
-      $cb->();
+      $fwriteErrorPage->();
       undef $watcher; # cancel circular-ref
     });
 
   };
-};
+};  #$app
 
 
 

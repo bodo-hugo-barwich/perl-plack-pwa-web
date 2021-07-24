@@ -1,51 +1,76 @@
 /**
- * @version 2021-05-23
+ * @version 2021-07-11
  * @package PWA Content Loader
  * @subpackage home.js
  */
 
 /**
  * This Script registers the Service Worker and loads the Content from the API
+ *
+ *---------------------------------
+ * Requirements:
+ * - The JavaScript Module "api.js" must be installed
+ *
  */
 
 
-function showCoffees()
+function showProductList(bxdisplay, lstcontents)
 {
   let output = "Coffes: showing ...";
 
-  if(typeof coffees !== 'undefined')
+  if(typeof bxdisplay !== 'undefined')
   {
-    output = "";
-
-    coffees.forEach(
-      ({ name, image, link_name }) =>
-        (output += `
-                <div class="card-list">
-                  <img class="card-image" src=${image} />
-                  <h3 class="card--title">${name}</h3>
-				  <!-- ${svmainpath}coffee/${link_name} -->
-                  <a class="card--link" href="#">Taste</a>
-                </div>
-                `)
-    );
-  }
-  else
-  {
-    console.log("Coffes: No Data");
-  } //if(typeof coffees !== 'undefined')
-
-  container.innerHTML = output;
-};
+	  if(typeof lstcontents !== 'undefined')
+	  {
+			var arrcoffees = Object.values(lstcontents);
 
 
-function initPage()
+	    output = "";
+
+	    for(let coffee of arrcoffees)
+			{
+	      output += `<div class="card-list">
+	                  <img class="card-image" src="${svmainpath}images/${coffee.image}"" />
+	                  <h3 class="card--title">${coffee.name}</h3>
+					  <!-- ${svmainpath}coffee/${coffee.link_name} -->
+	                  <a class="card--link" href="#">See Recipe</a>
+	                </div>
+	                `;
+			}	//for(let coffee of arrcoffees)
+	  }
+	  else	//Product Data empty
+	  {
+	    console.log("Coffees: No Data");
+	  } //if(typeof lstcontents !== 'undefined')
+
+	  bxdisplay.innerHTML = output;
+  }	//if(typeof bxdisplay !== 'undefined')
+}
+
+
+function showFetchError(bxdisplay, serrormessage)
 {
-  showCoffees();
+	if(typeof serrormessage === 'undefined')
+	{
+		serrormessage = 'Coffees: An Error occurred when loading Product List!'
+	}
 
-  //console.log("Coffees: fetch do ...");
+  if(typeof bxdisplay !== 'undefined')
+  {
+	  bxdisplay.innerHTML = serrormessage;
+  }	//if(typeof bxdisplay !== 'undefined')
+}
 
-  //fetchCoffees();
 
-  //console.log("Coffees: update queued.");
+
+function initPage(bxdisplay, lstcontents)
+{
+  showProductList(bxdisplay, lstcontents);
+
+  console.log("Coffees: fetch do ...");
+
+  fetchProductList(bxdisplay, lstcontents);
+
+  console.log("Coffees: update queued.");
 }
 

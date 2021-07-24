@@ -2,6 +2,7 @@ const assets = [
   "[% vmainpath %]",
   "[% vmainpath %]index.html",
   "[% vmainpath %]css/style.css",
+  "[% vmainpath %]js/api.js",
   "[% vmainpath %]js/home.js",
   "[% vmainpath %]js/app.js",
   "[% vmainpath %]images/coffee1.jpg",
