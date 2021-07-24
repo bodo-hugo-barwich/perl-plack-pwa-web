@@ -12,14 +12,17 @@
   </p>
   <div id="notification" class="notification-message" hidden></div>
   <div id="update" class="update" hidden><a href="#" id="update-link" class="card--link">Update</a></div>
-  <div class="container"></div>
+  <div id="productlistbox" class="container"></div>
   <div id="workermessage"></div>
   <div id="version">Version: '<span id="versionnumber"></span>'</div>
 </main>
     <script>
+const api_host = 'https://plack-pwa-api.glitch.me';
+const api_mainpath = '/';
+
 const svmainpath = '[% vmainpath %]';
 
-const container = document.querySelector(".container");
+const bxproducts = document.querySelector("#productlistbox");
 const notification = document.querySelector("#notification");
 const updatebox = document.querySelector("#update");
 const updatelink = document.querySelector("#update-link");
@@ -28,7 +31,9 @@ const vernobox = document.querySelector("#versionnumber");
 
 var sversion = '';
 
-var coffees = [
+var lstproducts = undefined;
+/*
+[
   {
     name: "Perspiciatis",
     link_name: 'perspiciatis',
@@ -75,8 +80,9 @@ var coffees = [
     image: svmainpath + "images/coffee9.jpg"
   }
 ];
-/*undefined;*/
+*/
 </script>
+<script src="[% vmainpath %]js/api.js"></script>
 <script src="[% vmainpath %]js/home.js"></script>
 <script src="[% vmainpath %]js/app.js"></script>
 <script type="text/javascript">

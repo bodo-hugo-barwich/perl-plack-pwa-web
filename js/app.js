@@ -274,9 +274,9 @@ function failedCheckVersion(error)
 //------------------------
 //Check Visual Output Boxes
 
-if(typeof container === 'undefined')
+if(typeof bxproducts === 'undefined')
 {
-  console.log("Target Box Element '#container' is missing!");
+  console.log("Target Box Element '#productlistbox' is missing!");
 }
 
 if(typeof notification === 'undefined')
@@ -300,7 +300,7 @@ if(typeof messagebox === 'undefined')
   console.log("Worker Message Box Element '#workermessage' is missing!");
 }
 
-document.addEventListener("DOMContentLoaded", initPage);
+document.addEventListener("DOMContentLoaded", initPage(bxproducts, lstproducts));
 
 
 //------------------------
