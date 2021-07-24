@@ -1,6 +1,6 @@
 /**
  * @version 2021-05-23
- * @package PWA Service Worker Communication
+ * @package PWA ServiceWorker Initialization
  * @subpackage app.js
  */
 
@@ -9,6 +9,8 @@
  *
  *---------------------------------
  * Requirements:
+ * - The Navigator must support ServiceWorker Functionality
+ * - The JavaScript Module "service-worker_utils.js" must be installed
  *
  *---------------------------------
  * Extensions:
@@ -196,7 +198,7 @@ function updatedServiceWorker(updateevent)
 
 }
 
-function updateWindow()
+function doUpdateWindow()
 {
   console.log('updateWindow - go ...');
 
@@ -271,23 +273,14 @@ function failedCheckVersion(error)
 //Executive Section
 
 
+console.log("Load Event: Application Initialization do ...");
+
 //------------------------
 //Check Visual Output Boxes
-
-if(typeof bxproducts === 'undefined')
-{
-  console.log("Target Box Element '#productlistbox' is missing!");
-}
 
 if(typeof notification === 'undefined')
 {
   console.log("Notification Box Element '#notification' is missing!");
-}
-
-if(typeof updatebox === 'undefined'
-  || typeof updatelink === 'undefined')
-{
-  console.log("Update Box Element '#update' is missing!");
 }
 
 if(typeof vernobox === 'undefined')
@@ -300,21 +293,61 @@ if(typeof messagebox === 'undefined')
   console.log("Worker Message Box Element '#workermessage' is missing!");
 }
 
-document.addEventListener("DOMContentLoaded", initPage(bxproducts, lstproducts));
+
+if(typeof updatebox === 'undefined'
+  || typeof updatelink === 'undefined')
+{
+  console.log("Update Box Element '#update' is missing!");
+}
+
+if(typeof updatelink !== 'undefined')
+{
+  updatelink.onclick = doUpdateWindow();
+}
+
+if(typeof bxproducts === 'undefined')
+{
+  console.log("Target Box Element '#productlistbox' is missing!");
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+   console.log("Load Event: initPage() do ...");
+
+	 initPage(bxproducts, lstproducts);
+});
 
 
 //------------------------
 //Initialize Service Worker
 
+
+console.log("Load Event: ServiceWorker Check do ...");
+
 if ("serviceWorker" in navigator)
 {
-  window.addEventListener("load", function() {
-    navigator.serviceWorker.register(svmainpath + "service-worker")
-      //Pass the ServiceWorkerRegistration instance
-      .then(reg => registeredServiceWorker(reg))
-      .then(reg => doCheckVersion(reg))
-      .then(reg => doCheckUpdate(reg))
-      .catch(err => console.log("service worker not registered", err));
 
-  });
+	if(typeof registeredServiceWorker === 'function')
+	{
+	console.log("Load Event: ServiceWorker Initialize do ...");
+
+		//Register the ServiceWorker Script
+	  window.addEventListener("load", function() {
+	    navigator.serviceWorker.register(svmainpath + "service-worker")
+	      //Pass the ServiceWorkerRegistration instance
+	      .then(reg => registeredServiceWorker(reg))
+	      .then(reg => doCheckVersion(reg))
+	      .then(reg => doCheckUpdate(reg))
+	      .catch(err => console.log("service worker not registered", err));
+
+	  });
+	}
+	else
+	{
+	  console.log("ServiceWorker: Script Utilities are not loaded!");
+	} //if ("serviceWorker" in navigator)
+}
+else
+{
+  console.log("ServiceWorker not supported!");
 } //if ("serviceWorker" in navigator)
+

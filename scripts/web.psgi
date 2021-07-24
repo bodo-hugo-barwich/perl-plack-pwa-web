@@ -226,7 +226,7 @@ my $app = sub {
       my $responder = shift;
       my $writer = $responder->([ 200, [ 'Content-Type', 'text/javascript' ]]);
       my $watcher;
-      my $rhshtmpldata = {'sversion' => '0.0.3', 'vmainpath' => $svmainpath};
+      my $rhshtmpldata = {'sversion' => '0.0.4', 'vmainpath' => $svmainpath};
 
       my $fwriteServiceWorkerScript = sub {
         #------------------------
@@ -331,7 +331,7 @@ my $app = sub {
 
 builder {
   #Graphic Elements Mapping
-  enable "Static", path => qr#^/(images|css|js)#, root => $webroot;
+  enable "Static", path => qr#^/(images|css|js|html)#, root => $webroot;
   #Any other Content
   $app;
 }

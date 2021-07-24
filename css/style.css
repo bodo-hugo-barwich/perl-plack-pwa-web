@@ -1,4 +1,11 @@
+/*
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap");
+*/
+@font-face {
+    font-family: "Nunito";
+    src: url(NunitoSans-SemiBold.ttf);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,7 +14,7 @@
 
 body {
   background: #fdfdfd;
-  font-family: "Nunito", sans-serif;
+  font-family: sans-serif/*, "Nunito"*/;
   font-size: 1rem;
 }
 

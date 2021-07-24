@@ -84,11 +84,19 @@ var lstproducts = undefined;
 </script>
 <script src="[% vmainpath %]js/api.js"></script>
 <script src="[% vmainpath %]js/home.js"></script>
+<!--  <script src="[% vmainpath %]js/service-worker_utils.js"></script>  -->
 <script src="[% vmainpath %]js/app.js"></script>
 <script type="text/javascript">
-if(typeof updatelink !== 'undefined')
+console.log("Load Event: HTML done.");
+
+document.addEventListener("DOMContentLoaded", function() {
+  console.log("Load Event: DOMContentLoaded go ...");
+});
+
+/*if(typeof updatelink !== 'undefined')
 {
-  updatelink.onclick = updateWindow;
+  updatelink.onclick = updateWindow();
 }
+*/
 </script>
 

@@ -4,6 +4,7 @@ const assets = [
   "[% vmainpath %]css/style.css",
   "[% vmainpath %]js/api.js",
   "[% vmainpath %]js/home.js",
+  "[% vmainpath %]js/service-worker_utils.js",
   "[% vmainpath %]js/app.js",
   "[% vmainpath %]images/coffee1.jpg",
   "[% vmainpath %]images/coffee2.jpg",

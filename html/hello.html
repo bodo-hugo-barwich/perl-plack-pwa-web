@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hello Page</title>
+</head>
+<body>
+  <h1>Hello Page</h1>
+  <div id="greeting"></div>
+  <script src="/js/api.js"></script>
+  <script src="/js/home.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/hello_script.js"></script>
+  <script type="text/javascript">
+  const bxgreeting = document.querySelector("#greeting");
+
+  console.log("Load Event: HTML done.");
+
+  document.addEventListener("DOMContentLoaded", function() {
+    console.log("Load Event: DOMContentLoaded go ...");
+
+    //printHelloMessage(bxgreeting);
+  });
+
+  </script>
+</body>
+</html>
