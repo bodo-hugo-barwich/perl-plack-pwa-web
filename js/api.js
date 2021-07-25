@@ -96,6 +96,6 @@ function fetchCoffee(bxdisplay, link_name)
 //==============================================================================
 //Executive Section
 
-console.log("Load Event: API Utilities loaded.");
+console.log("Load Event: api.js loaded.");
 
 

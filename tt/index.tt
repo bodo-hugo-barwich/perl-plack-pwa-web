@@ -29,8 +29,6 @@ const updatelink = document.querySelector("#update-link");
 const messagebox = document.querySelector("#workermessage");
 const vernobox = document.querySelector("#versionnumber");
 
-var sversion = '';
-
 var lstproducts = undefined;
 /*
 [
@@ -92,11 +90,5 @@ console.log("Load Event: HTML done.");
 document.addEventListener("DOMContentLoaded", function() {
   console.log("Load Event: DOMContentLoaded go ...");
 });
-
-/*if(typeof updatelink !== 'undefined')
-{
-  updatelink.onclick = updateWindow();
-}
-*/
 </script>
 

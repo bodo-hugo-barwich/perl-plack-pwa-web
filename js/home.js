@@ -40,13 +40,13 @@ function showProductList(bxdisplay, lstcontents)
 
 	    output = "";
 
-			console.log("Coffees: fetched Content List '" + arrcoffees + "'");
+			//console.log("Coffees: fetched Content List '" + arrcoffees + "'");
 
 	    for(icof in arrcoffees)
 			{
 				coffee = arrcoffees[icof];
 
-				console.log("Coffee: Content [" + icof + "]: '" + coffee + "'.");
+				//console.log("Coffee: Content [" + icof + "]: '" + coffee + "'.");
 
 			  card = document.createElement('div');
 
@@ -125,5 +125,5 @@ function initPage(bxdisplay, lstcontents)
 //==============================================================================
 //Executive Section
 
-console.log("Load Event: Home Page Rendering loaded.");
+console.log("Load Event: home.js loaded.");
 
