@@ -1,5 +1,5 @@
 /**
- * @version 2021-05-23
+ * @version 2021-07-25
  * @package PWA ServiceWorker Initialization
  * @subpackage app.js
  */
@@ -24,7 +24,7 @@
 //==============================================================================
 //Auxiliary Functions
 
-
+/**/
 function registeredServiceWorker(registration)
 {
   console.log('ServiceWorker registration succeeded:', registration);
@@ -294,6 +294,7 @@ var workerstatus = {'version': '', 'updatewaiting': false};
 
 console.log("Load Event: app.js loaded.");
 
+
 //------------------------
 //Check Visual Output Boxes
 
@@ -312,7 +313,6 @@ if(typeof messagebox === 'undefined')
   console.log("Worker Message Box Element '#workermessage' is missing!");
 }
 
-
 if(typeof updatebox === 'undefined'
   || typeof updatelink === 'undefined')
 {
@@ -327,24 +327,9 @@ if(typeof updatelink !== 'undefined')
   updatelink.onclick = doUpdateWindow;
 }
 
-if(typeof bxproducts === 'undefined')
-{
-  console.log("Target Box Element '#productlistbox' is missing!");
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-   console.log("Load Event: initPage() do ...");
-
-	 initPage(bxproducts, lstproducts);
-
-
-
-});
-
 
 //------------------------
 //Initialize Service Worker
-
 
 console.log("Load Event: ServiceWorker Check do ...");
 
@@ -355,6 +340,7 @@ if ("serviceWorker" in navigator)
 	{
 		console.log("Load Event: ServiceWorker Initialize do ...");
 
+/**/
 			//Register the ServiceWorker Script
 		  window.addEventListener("load", function() {
 		    navigator.serviceWorker.register(svmainpath + "service-worker")
@@ -365,6 +351,7 @@ if ("serviceWorker" in navigator)
 		      .catch(err => console.log("service worker not registered", err));
 
 		  });
+
 	}
 	else
 	{

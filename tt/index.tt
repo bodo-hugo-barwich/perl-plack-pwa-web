@@ -18,6 +18,7 @@
 </main>
     <script>
 const api_host = 'https://plack-pwa-api.glitch.me';
+//const api_host = 'http://localhost:3100';
 const api_mainpath = '/';
 
 const svmainpath = '[% vmainpath %]';
@@ -89,6 +90,10 @@ console.log("Load Event: HTML done.");
 
 document.addEventListener("DOMContentLoaded", function() {
   console.log("Load Event: DOMContentLoaded go ...");
+  console.log("Load Event: initPage() do ...");
+
+  initPage(bxproducts, lstproducts);
 });
+
 </script>
 

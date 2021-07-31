@@ -78,20 +78,30 @@ page.onUrlChanged = function() {
 };
 
 page.onResourceRequested = function (requestData, request) {
-  console.log('url requested: ' + requestData.url);
+  console.log("Request (#" + requestData.id + ", method: '" + requestData.method + "', url: '" + requestData.url + "'): "
+		+ JSON.stringify(requestData));
+  console.log('Request Object: ' + JSON.stringify(request));
 };
 
 page.onResourceReceived = function(response) {
-  console.log('Response (#' + response.id + ', stage "' + response.stage + '"): ' + JSON.stringify(response));
+  console.log("Response (#" + response.id + ", url: '" + response.url + "', stage '" + response.stage + "'): "
+		+ JSON.stringify(response));
 };
 
 page.onConsoleMessage = function(msg, lineNum, sourceId) {
-  console.log('Browser: ' + msg + ' (from line #' + lineNum + ' in "' + sourceId + '")');
+	if(lineNum !== 'undefined')
+	{
+	  console.log('Browser: ' + msg + ' (from line #' + lineNum + ' in "' + sourceId + '")');
+	}
+	else
+	{
+	  console.log('Browser: ' + msg);
+	}
 };
 
 page.onResourceError = function(resourceError) {
-  console.log('Unable to load resource (#' + resourceError.id + 'URL:' + resourceError.url + ')');
-  console.log('Error code: ' + resourceError.errorCode + '. Description: ' + resourceError.errorString);
+  console.log('Resource (#' + resourceError.id + ', url: ' + resourceError.url + '): Resource could not be loaded!');
+  console.log('Resource Error [code: ' + resourceError.errorCode + '] - Message: ' + resourceError.errorString);
 };
 
 page.onError = function(msg, trace) {
@@ -109,6 +119,22 @@ page.onError = function(msg, trace) {
 
 };
 
+
+console.log("settings 0 :");
+
+printSettings(page.settings);
+
+page.settings['localToRemoteUrlAccessEnabled'] = true;
+page.settings['webSecurityEnabled'] = false;
+page.settings['XSSAuditingEnabled'] = true;
+page.settings.localToRemoteUrlAccessEnabled = true;
+page.settings.ignoreSslErrors = true;
+
+console.log("settings 1 :");
+
+printSettings(page.settings);
+
+
 // Open Twitter on 'sencha' profile and, onPageLoad, do...
 page.open(main_url, function (status) {
     // Check for page load success
@@ -116,20 +142,9 @@ page.open(main_url, function (status) {
         console.log("Unable to access network");
            phantom.exit(1);
     } else {
-		console.log("Page URL '" + page.url + "': opened with Status[" + status + "].");
+		console.log("Page URL '" + page.url + "': opened with Status [" + status + "].");
 
 		page.render('web_home_start.jpg', {format: 'jpg', quality: '100'});
-
-		console.log("settings 0 :");
-
-		printSettings(page.settings);
-
-		page.settings['localToRemoteUrlAccessEnabled'] = true;
-		page.settings['webSecurityEnabled'] = false;
-
-		console.log("settings 1 :");
-
-		printSettings(page.settings);
 
 		var lstscrs = page.evaluate(function() {
 			var lsttgs = document.getElementsByTagName("script");

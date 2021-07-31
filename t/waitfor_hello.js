@@ -82,7 +82,8 @@ page.onResourceRequested = function (requestData, request) {
 };
 
 page.onResourceReceived = function(response) {
-  console.log('Response (#' + response.id + ', stage "' + response.stage + '"): ' + JSON.stringify(response));
+  console.log("Response (#" + response.id + ", url: '" + response.url + "', stage '" + response.stage + "'): "
+		+ JSON.stringify(response));
 };
 
 page.onConsoleMessage = function(msg, lineNum, sourceId) {

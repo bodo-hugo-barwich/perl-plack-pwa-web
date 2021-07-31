@@ -1,5 +1,5 @@
 /**
- * @version 2021-07-11
+ * @version 2021-07-25
  * @package PWA Content Loader
  * @subpackage home.js
  */
@@ -23,7 +23,10 @@ function showProductList(bxdisplay, lstcontents)
   {
 	  if(typeof lstcontents !== 'undefined')
 	  {
-			var arrcoffees = Object.values(lstcontents);
+			console.log("Object: '" + Object + "'");
+
+			//var arrcoffees = Object.values(lstcontents);
+			var arrcoffees = lstcontents;
 			var coffee = undefined;
 		  var card = undefined;
 		  var title = undefined;
@@ -32,21 +35,22 @@ function showProductList(bxdisplay, lstcontents)
 		  var sttltxt = undefined;
 			var slnktxt = undefined;
 			var scmttxt = undefined;
-			var icof = -1;
+			var skey = '';
 
+
+	    output = '';
 
 			//Clear previous Content
-			bxdisplay.replaceChildren();
+			//bxdisplay.replaceChildren();
+			bxdisplay.innerHTML = output;
 
-	    output = "";
+			console.log("Coffees: fetched Content List '" + arrcoffees + "'");
 
-			//console.log("Coffees: fetched Content List '" + arrcoffees + "'");
-
-	    for(icof in arrcoffees)
+	    for(skey in arrcoffees)
 			{
-				coffee = arrcoffees[icof];
+				coffee = arrcoffees[skey];
 
-				//console.log("Coffee: Content [" + icof + "]: '" + coffee + "'.");
+				console.log("Coffee: Content [" + skey + "]: '" + coffee + "'.");
 
 			  card = document.createElement('div');
 
@@ -68,7 +72,7 @@ function showProductList(bxdisplay, lstcontents)
 				title.appendChild(sttltxt);
 				card.appendChild(title);
 
-				scmttxt = new Comment(svmainpath + 'coffee/' + coffee.link_name);
+				scmttxt = document.createComment(" " + svmainpath + 'coffee/' + coffee.link_name + " ");
 
 				card.appendChild(scmttxt);
 
@@ -91,7 +95,7 @@ function showProductList(bxdisplay, lstcontents)
 		                </div>
 		                `;
 */
-			}	//for(let coffee of arrcoffees)
+			}	//for(skey in arrcoffees)
 
 	  }
 	  else	//Product Data empty
@@ -104,13 +108,25 @@ function showProductList(bxdisplay, lstcontents)
 	  	bxdisplay.innerHTML = output;
 		}
   }	//if(typeof bxdisplay !== 'undefined')
-};
+}
+
+
+function showFetchError(bxdisplay, serrormessage)
+{
+	if(typeof serrormessage === 'undefined')
+	{
+		serrormessage = 'Coffees: An Error occurred when loading Product List!'
+	}
+
+  if(typeof bxdisplay !== 'undefined')
+  {
+	  bxdisplay.innerHTML = serrormessage;
+  }	//if(typeof bxdisplay !== 'undefined')
+}
 
 
 function initPage(bxdisplay, lstcontents)
 {
-  console.log("initPage() - go ...");
-
   showProductList(bxdisplay, lstcontents);
 
   console.log("Coffees: fetch do ...");
@@ -125,5 +141,15 @@ function initPage(bxdisplay, lstcontents)
 //==============================================================================
 //Executive Section
 
+
 console.log("Load Event: home.js loaded.");
+
+
+//------------------------
+//Check Visual Output Boxes
+
+if(typeof bxproducts === 'undefined')
+{
+  console.log("Target Box Element '#productlistbox' is missing!");
+}
 

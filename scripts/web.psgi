@@ -226,7 +226,7 @@ my $app = sub {
       my $responder = shift;
       my $writer = $responder->([ 200, [ 'Content-Type', 'text/javascript' ]]);
       my $watcher;
-      my $rhshtmpldata = {'sversion' => '0.0.1', 'vmainpath' => $svmainpath};
+      my $rhshtmpldata = {'sversion' => '0.0.2', 'vmainpath' => $svmainpath};
 
       my $fwriteServiceWorkerScript = sub {
         #------------------------

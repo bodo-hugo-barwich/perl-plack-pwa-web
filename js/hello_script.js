@@ -1,10 +1,25 @@
+/**
+ * @version 2021-07-25
+ * @package PhantomJS Tests
+ * @subpackage hello_script.js
+ */
+
+/**
+ * This Library provides Functions to test JavaScript inclusions and executions with PhantomJS
+ */
+
+
+
 function printHelloMessage(messagebox)
 {
-  console.log("printHelloMessage(): go ...");
+	var smessage = 'Hello PhantomJS!';
+
+
+	console.log("printHelloMessage(): go ...");
 
 	if(typeof messagebox !== 'undefined')
 	{
-		messagebox.innerHTML = 'Hello PhantomJS!';
+		messagebox.innerHTML = smessage;
 	}
 	else
 	{
@@ -19,12 +34,14 @@ function printHelloMessage(messagebox)
 //Executive Section
 
 
+console.log("Load Event: hello_script.js loaded.");
+
 
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("Load Event: printHelloMessage() do ...");
+  console.log("Load Event: printHelloMessage() do ...");
 
-    printHelloMessage(bxgreeting);
-  });
+  printHelloMessage(bxgreeting);
+});
 
 
 console.log("Load Event: ServiceWorker - Support checking ...");
