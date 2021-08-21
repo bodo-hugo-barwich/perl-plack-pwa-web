@@ -31,6 +31,7 @@ use File::Basename qw(dirname);
 use Data::Dump qw(dump);
 
 use AnyEvent;
+use Twiggy::Server;
 use Plack::Builder;
 use Plack::Request;
 use Template;
@@ -224,9 +225,9 @@ my $app = sub {
 
     return sub {
       my $responder = shift;
-      my $writer = $responder->([ 200, [ 'Content-Type', 'text/javascript' ]]);
+      my $writer = $responder->([ 200, [ 'Content-Type', 'application/javascript' ]]);
       my $watcher;
-      my $rhshtmpldata = {'sversion' => '0.0.2', 'vmainpath' => $svmainpath};
+      my $rhshtmpldata = {'sversion' => '0.0.1', 'vmainpath' => $svmainpath};
 
       my $fwriteServiceWorkerScript = sub {
         #------------------------
@@ -329,12 +330,41 @@ my $app = sub {
 #URL Mapping
 
 
-builder {
+my $web = builder {
   #Graphic Elements Mapping
   enable "Static", path => qr#^/(images|css|js|html)#, root => $webroot;
+  #Configure Logging
+  enable "Plack::Middleware::AccessLog::Timed"
+    , format => '%{X-FORWARDED-PROTO}i:%V (%h,%{X-FORWARDED-FOR}i) %{%F:%T}t [%D] '
+      . '"Mime:%{Content-Type}o" "%r" %>s %b "%{Referer}i" "%{User-agent}i"';
   #Any other Content
   $app;
-}
+};
+
+
+
+#----------------------------------------------------------------------------
+#Create Service Instance
+
+
+print "args dmp:\n", dump @ARGV ;
+print "\n";
+
+print "ENV dmp:\n", dump %ENV ;
+print "\n";
+
+my $host = '0.0.0.0';
+my $port = $ENV{'PORT'} || 3000;
+
+my $server = Twiggy::Server->new(
+    host => $host,
+    port => $port,
+    read_chunk_size => 32768,
+);
+
+
+#Start Service
+$server->run($web);
 
 
 
