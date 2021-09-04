@@ -17,6 +17,7 @@ RUN groupadd web &&\
 ADD ./ /home/plack-pwa
 USER pwa1_web
 WORKDIR /home/plack-pwa
-RUN mkdir -p /home/plack-pwa/log
+RUN mkdir -p /home/plack-pwa/perl5 \
+  && mkdir -p /home/plack-pwa/log
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["plackup", "--server", "Twiggy", "--port", "3000", "scripts/web.psgi"]
