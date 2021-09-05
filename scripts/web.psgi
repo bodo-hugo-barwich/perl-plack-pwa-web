@@ -366,12 +366,18 @@ sub dispatchErrorPageHTML
 sub dispatchErrorResponse
 {
   my ($res, $cnf, $rhshdata) = @_ ;
+  my $scomp = $ENV{'COMPONENT'} || 'default';
   my $sout = '';
 
 
   #------------------------
   #Error Response
   #Finalize Request with Plain Text Error Message
+
+  $scomp .= ' - ';
+  $scomp .= $ENV{'PLACK_ENV'} || 'deployment';
+
+  $cnf = {'project' => $scomp} unless defined $cnf ;
 
   $rhshdata = {} unless defined $rhshdata ;
   $rhshdata->{'title'} = 'Error' unless defined $rhshdata->{'title'};
@@ -417,11 +423,11 @@ $scomp .= $ENV{'PLACK_ENV'} || 'deployment';
 
 if(defined $config)
 {
-  print STDERR "Server Configuration '", $config->{'component'}, " / ", $scomp, "': loaded.\n";
+  print STDERR "Server '", $config->{'component'}, " / ", $scomp, "' - Configuration: loaded.\n";
 }
 else  #Configuration Loading failed
 {
-  print STDERR "Server Configuration '$scomp': Loading failed!\n";
+  print STDERR "Server '$scomp' - Configuration : Loading failed!\n";
 } #if(defined $config)
 
 print STDERR "ENV dmp:\n", dump %ENV ;
@@ -438,7 +444,7 @@ my $app = sub {
 
 
   #Exit on missing Configuration
-  return dispatchErrorResponse($response, {'description' => 'Server Configuration could not be loaded.'})
+  return dispatchErrorResponse($response, undef, {'description' => 'Server Configuration could not be loaded.'})
     unless(defined $config);
 
 
@@ -481,7 +487,8 @@ my $app = sub {
 #URL Mapping
 
 
-my $web = builder {
+#my $web = builder {
+builder {
   #Graphic Elements Mapping
   enable "Static", path => qr#^/(images|css|js|html)#, root => $webroot;
   #Configure Logging
@@ -498,21 +505,21 @@ my $web = builder {
 #Create Service Instance
 
 
-print "args dmp:\n", dump @ARGV ;
-print "\n";
+#print "args dmp:\n", dump @ARGV ;
+#print "\n";
 
-my $host = '0.0.0.0';
-my $port = $ENV{'PORT'} || 3000;
+#my $host = '0.0.0.0';
+#my $port = $ENV{'PORT'} || 3000;
 
-my $server = Twiggy::Server->new(
-    host => $host,
-    port => $port,
-    read_chunk_size => 32768,
-);
+#my $server = Twiggy::Server->new(
+#    host => $host,
+#    port => $port,
+#    read_chunk_size => 32768,
+#);
 
 
 #Start Service
-$server->run($web);
+#$server->run($web);
 
 
 
