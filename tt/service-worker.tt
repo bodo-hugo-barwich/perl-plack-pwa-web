@@ -24,7 +24,7 @@ var staticDevCoffee = "dev-coffee-site-" + sversion;
 
 self.addEventListener("install", installEvent => {
   console.log('Attempting to install service worker and cache static assets');
-  console.log(`Cache '${staticDevCoffee}': building ...`);
+  console.log("Cache '" + staticDevCoffee + "': building ...");
 
   installEvent.waitUntil(
     caches.open(staticDevCoffee).then(cache => {
@@ -35,7 +35,7 @@ self.addEventListener("install", installEvent => {
 
 self.addEventListener('activate', e => {
   console.log('Service Worker starting ...');
-  console.log(`Cache '${staticDevCoffee}': cleaning ...`);
+  console.log("Cache '" + staticDevCoffee + "': cleaning ...");
 
   e.waitUntil(
     caches.keys().then(keyList => {

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # @author Bodo (Hugo) Barwich
-# @version 2021-06-05
+# @version 2021-09-04
 # @package Plack Twiggy PWA Web
 # @subpackage /scripts/web.psgi
 
@@ -26,9 +26,12 @@
 use warnings;
 use strict;
 
+use POSIX qw(strftime);
 use Cwd qw(abs_path);
 use File::Basename qw(dirname);
 use Data::Dump qw(dump);
+
+use YAML;
 
 use AnyEvent;
 use Twiggy::Server;
@@ -37,8 +40,63 @@ use Plack::Request;
 use Template;
 
 
+
 #----------------------------------------------------------------------------
 #Auxiliary Functions
+
+
+sub  loadConfiguration
+{
+  my $smndir = $_[0];
+  my $scnfdir = $smndir . '/config/';
+  my $scomp = $ENV{'COMPONENT'} || 'default';
+  my $splkenv = $ENV{'PLACK_ENV'} || 'deployment';
+  my $scnfhstnm = '';
+  my $scnfflnm = '';
+  my $scnfext = '.yml';
+  my $rscnf = undef;
+
+
+  $scnfhstnm = $scomp;
+  $scnfhstnm =~ tr/\./-/;
+
+  $scnfdir = $smndir . '/' unless(-d $scnfdir);
+
+  $scnfflnm = $scnfhstnm . '-' . $splkenv . $scnfext;
+
+  $scnfflnm = $scnfhstnm . $scnfext unless(-f $scnfdir . $scnfflnm);
+
+  $scnfflnm = 'default' . $scnfext unless(-f $scnfdir . $scnfflnm);
+
+  if(-f $scnfdir . $scnfflnm)
+  {
+    eval
+    {
+      $rscnf = YAML::LoadFile($scnfdir . $scnfflnm);
+
+      $rscnf->{'component'} = $scomp;
+      $rscnf->{'maindirectory'} = $smndir;
+      $rscnf->{'configfile'} = $scnfdir . $scnfflnm;
+    };
+
+    if($@)
+    {
+      $rscnf = undef;
+
+      print STDERR "Component '$scomp': Configuration could not be loaded!\n"
+        , "Configuration File '${scnfdir}${scnfflnm}': Read Open failed.\n"
+        , "File '${scnfdir}${scnfflnm}' - Message: '", $@, "'\n";
+    } #if($@)
+  }
+  else  #Configuration File does not exist
+  {
+    print STDERR "Component '$scomp': Configuration could not be loaded!\n"
+      , "Configuration File '${scnfdir}${scnfflnm}': File does not exist.\n";
+  } #if(-f $scnfdir . $scnfflnm)
+
+
+  return $rscnf;
+}
 
 
 sub render_template_html
@@ -93,18 +151,295 @@ sub render_template_headless
   return \$out
 }
 
+sub dispatchHomePage
+{
+  my ($req, $res, $cnf) = @_ ;
+  my $stmplnm = 'index';
+  my $rhshtmpldata = {'pagetitle' => $cnf->{'project'}
+    , 'projectname' => $cnf->{'project'}
+    , 'vmainpath' => $cnf->{'vmainpath'}
+  };
+  my $rsout = undef;
+
+
+  #------------------------
+  #Index Page
+
+  eval
+  {
+    #Render the HTML Template
+    $rsout = render_template_html($cnf->{'maindirectory'}, $stmplnm, $rhshtmpldata);
+  };
+
+  if($@)
+  {
+    $rsout = undef;
+
+    $rhshtmpldata->{'title'} = 'Exception';
+    $rhshtmpldata->{'statuscode'} = 500;
+    $rhshtmpldata->{'errorcode'} = 0 + $! ;
+    $rhshtmpldata->{'errormessage'} = 'Template Rendering failed!';
+    $rhshtmpldata->{'errormessage'} = "Template '$stmplnm': Rendering failed with [" . $rhshtmpldata->{'errorcode'} . "]";
+
+    my $stmnow  = strftime('%F %T', localtime);
+
+    print STDERR "$stmnow : Request '", $req->env->{'REQUEST_URI'}, "' - Exception: ", $@ ;
+
+    print STDERR "Template '$stmplnm' - Rendering failed with [" . $rhshtmpldata->{'errorcode'} . "]: ", $@ ;
+  } #if($@)
+
+  if(defined $rsout)
+  {
+    #Set the rendered HTML
+    $res->code(200);
+    $res->content($$rsout);
+  }
+  else
+  {
+    return dispatchErrorResponse($res, $cnf, $rhshtmpldata);
+  } #if(defined $rsout)
+
+
+  return $res->finalize;
+}
+
+
+sub dispatchManifest
+{
+  my ($req, $res, $cnf) = @_ ;
+  my $stmplnm = 'manifest';
+  my $rhshtmpldata = {'projectname' => $cnf->{'project'}
+    , 'projectcodename' => $cnf->{'codename'}
+    , 'vmainpath' => $cnf->{'vmainpath'}
+  };
+  my $rsout = undef;
+
+
+  #------------------------
+  #Manifest Page
+
+  eval
+  {
+    #Render the Template
+    $rsout = render_template_headless($cnf->{'maindirectory'}, $stmplnm, $rhshtmpldata);
+  };
+
+  if($@)
+  {
+    $rsout = undef;
+
+    $rhshtmpldata->{'title'} = 'Exception';
+    $rhshtmpldata->{'statuscode'} = 500;
+    $rhshtmpldata->{'errorcode'} = 0 + $! ;
+    $rhshtmpldata->{'errormessage'} = 'Template Rendering failed!';
+    $rhshtmpldata->{'errormessage'} = "Template '$stmplnm': Rendering failed with [" . $rhshtmpldata->{'errorcode'} . "]";
+
+    my $stmnow  = strftime('%F %T', localtime);
+
+    print STDERR "$stmnow : Request '", $req->env->{'REQUEST_URI'}, "' - Exception: ", $@ ;
+
+    print STDERR "Template '$stmplnm' - Rendering failed with [" . $rhshtmpldata->{'errorcode'} . "]: ", $@ ;
+  } #if($@)
+
+  if(defined $rsout)
+  {
+    #Set the rendered HTML
+    $res->code(200);
+    $res->content_type('application/json');
+    $res->content($$rsout);
+  }
+  else  #Template Rendering has failed
+  {
+    return dispatchErrorResponse($res, $cnf, $rhshtmpldata);
+  } #if(defined $rsout)
+
+
+  return $res->finalize;
+}
+
+
+sub dispatchServiceWorker
+{
+  my ($req, $res, $cnf) = @_ ;
+  my $stmplnm = 'service-worker';
+  my $rhshtmpldata = {'sversion' => $cnf->{'version'}, 'vmainpath' => $cnf->{'vmainpath'}};
+  my $rsout = undef;
+
+
+  #------------------------
+  #Service Worker Script
+
+  eval
+  {
+    #Render the Template
+    $rsout = render_template_headless($cnf->{'maindirectory'}, $stmplnm, $rhshtmpldata);
+  };
+
+  if($@)
+  {
+    $rsout = undef;
+
+    $rhshtmpldata->{'title'} = 'Exception';
+    $rhshtmpldata->{'statuscode'} = 500;
+    $rhshtmpldata->{'errorcode'} = 0 + $! ;
+    $rhshtmpldata->{'errormessage'} = 'Template Rendering failed!';
+    $rhshtmpldata->{'errormessage'} = "Template '$stmplnm': Rendering failed with [" . $rhshtmpldata->{'errorcode'} . "]";
+
+    my $stmnow  = strftime('%F %T', localtime);
+
+    print STDERR "$stmnow : Request '", $req->env->{'REQUEST_URI'}, "' - Exception: ", $@ ;
+
+    print STDERR "Template '$stmplnm' - Rendering failed with [" . $rhshtmpldata->{'errorcode'} . "]: ", $@ ;
+  } #if($@)
+
+  if(defined $rsout)
+  {
+    #Set the rendered HTML
+    $res->code(200);
+    $res->content_type('application/javascript');
+    $res->content($$rsout);
+  }
+  else  #Template Rendering has failed
+  {
+    return dispatchErrorResponse($res, $cnf, $rhshtmpldata);
+  } #if(defined $rsout)
+
+
+  return $res->finalize;
+}
+
+sub dispatchErrorPageHTML
+{
+  my ($req, $res, $cnf) = @_ ;
+  my $stmplnm = 'error';
+  my $rhshtmpldata = {'pagetitle' => $cnf->{'project'} . ' - Error'
+    , 'vmainpath' => $cnf->{'vmainpath'}
+    , 'statuscode' => 404
+    , 'errormessage' => 'Not Found.'
+    , 'errordescription' => 'The Page does not exist.'
+  };
+  my $rsout = undef;
+
+
+  #------------------------
+  #Error Page
+
+  eval
+  {
+    #Render the HTML Template
+    $rsout = render_template_html($cnf->{'maindirectory'}, $stmplnm, $rhshtmpldata);
+  };
+
+  if($@)
+  {
+    $rsout = undef;
+
+    $rhshtmpldata->{'title'} = 'Exception';
+    $rhshtmpldata->{'statuscode'} = 500;
+    $rhshtmpldata->{'errorcode'} = 0 + $! ;
+    $rhshtmpldata->{'errormessage'} = 'Template Rendering failed!';
+    $rhshtmpldata->{'errormessage'} = "Template '$stmplnm': Rendering failed with [" . $rhshtmpldata->{'errorcode'} . "]";
+
+    my $stmnow  = strftime('%F %T', localtime);
+
+    print STDERR "$stmnow : Request '", $req->env->{'REQUEST_URI'}, "' - Exception: ", $@ ;
+
+    print STDERR "Template '$stmplnm' - Rendering failed with [" . $rhshtmpldata->{'errorcode'} . "]: ", $@ ;
+  } #if($@)
+
+  if(defined $rsout)
+  {
+    #Set the rendered HTML
+    $res->code(404);
+    $res->content($$rsout);
+  }
+  else  #Template Rendering has failed
+  {
+    return dispatchErrorResponse($res, $cnf, $rhshtmpldata);
+  } #if(defined $rsout)
+
+
+  return $res->finalize;
+}
+
+
+sub dispatchErrorResponse
+{
+  my ($res, $cnf, $rhshdata) = @_ ;
+  my $sout = '';
+
+
+  #------------------------
+  #Error Response
+  #Finalize Request with Plain Text Error Message
+
+  $rhshdata = {} unless defined $rhshdata ;
+  $rhshdata->{'title'} = 'Error' unless defined $rhshdata->{'title'};
+  $rhshdata->{'status'} = 500 unless defined $rhshdata->{'status'};
+  $rhshdata->{'message'} = 'An Error has occurred!' unless defined $rhshdata->{'message'};
+  $rhshdata->{'description'} = '' unless defined $rhshdata->{'description'};
+
+
+  my $rhshrspdata = {'title' => $cnf->{'project'} . ' - ' . $rhshdata->{'title'}
+    , 'statuscode' => $rhshdata->{'status'}
+    , 'errormessage' => $rhshdata->{'message'}
+    , 'errordescription' => $rhshdata->{'description'}
+  };
+
+
+  $sout .= $rhshrspdata->{'title'} . "\n==========================\n\n"
+    . "Error " . $rhshrspdata->{'statuscode'} . ": " . $rhshrspdata->{'errormessage'} . "\n"
+    . "------------------\n\n" . $rhshrspdata->{'errordescription'} . "\n";
+
+  $res->code($rhshrspdata->{'statuscode'});
+  $res->content_type('text/plain');
+  $res->content($sout);
+
+
+  return $res->finalize;
+}
+
 
 
 
 #----------------------------------------------------------------------------
 #Executing Section
 
+
+my $scomp = $ENV{'COMPONENT'} || 'default';
 my $webroot = dirname(dirname( abs_path(__FILE__) ));
-my $svmainpath = '/';
+my $config = loadConfiguration($webroot);
+my $svmainpath = $config->{'vmainpath'};
+
+
+$scomp .= ' - ';
+$scomp .= $ENV{'PLACK_ENV'} || 'deployment';
+
+if(defined $config)
+{
+  print STDERR "Server Configuration '", $config->{'component'}, " / ", $scomp, "': loaded.\n";
+}
+else  #Configuration Loading failed
+{
+  print STDERR "Server Configuration '$scomp': Loading failed!\n";
+} #if(defined $config)
+
+print STDERR "ENV dmp:\n", dump %ENV ;
+print STDERR "\n";
+
 
 my $app = sub {
   my $env = shift;
   my $request = Plack::Request->new($env);
+  my $response = $request->new_response(200);
+
+
+  $response->content_type('text/html');
+
+
+  #Exit on missing Configuration
+  return dispatchErrorResponse($response, {'description' => 'Server Configuration could not be loaded.'})
+    unless(defined $config);
 
 
 	#------------------------
@@ -114,214 +449,30 @@ my $app = sub {
     || $request->path_info() eq '/index.html')
   {
     #------------------------
-    #Index Page
+    #Dispatch Home Page
 
-    return sub {
-      my $responder = shift;
-      my $writer = $responder->([ 200, [ 'Content-Type', 'text/html' ]]);
-      my $watcher;
-      my $rhshtmpldata = {'pagetitle' => 'Plack Twiggy PWA'
-        , 'projectname' => 'Plack Twiggy PWA'
-        , 'vmainpath' => $svmainpath
-      };
-
-      my $fwriteIndexPage = sub {
-        #------------------------
-        #HTML Render Callback
-
-        my $message = shift;
-        my $rsout = undef;
-
-
-        eval
-        {
-          #Render the HTML Template
-          $rsout = render_template_html($webroot, 'index', $rhshtmpldata);
-        };
-
-        if($@)
-        {
-          $rsout = undef;
-        }
-
-        if(defined $rsout)
-        {
-          #Print the rendered HTML
-          $writer->write($$rsout);
-        }
-
-        $writer->write("Finishing: $message\n");
-        $writer->close;
-
-      };  #$fwriteIndexPage
-
-
-     $writer->write("Starting: ${\scalar(localtime)}\n");
-
-     $watcher = AnyEvent->timer(
-      after => 0,
-      cb => sub {
-        $fwriteIndexPage->(scalar localtime);
-        undef $watcher; # cancel circular-ref
-      });
-
-    };
+    return dispatchHomePage($request, $response, $config);
   }
   elsif($request->path_info() eq '/manifest.json')
   {
     #------------------------
-    #Manifest Page
+    #Dispatch Manifest Page
 
-    return sub {
-      my $responder = shift;
-      my $writer = $responder->([ 200, [ 'Content-Type', 'application/json' ]]);
-      my $watcher;
-      my $rhshtmpldata = {'projectname' => 'Plack Twiggy PWA'
-        , 'projectcodename' => 'PlackPWA'
-        , 'vmainpath' => $svmainpath
-      };
-
-      my $frwriteManifest = sub {
-        #------------------------
-        #HTML Render Callback
-
-        my $rsout = undef;
-
-
-        eval
-        {
-          #Render the Template
-          $rsout = render_template_headless($webroot, 'manifest', $rhshtmpldata);
-        };
-
-        if($@)
-        {
-          $rsout = undef;
-        }
-
-        if(defined $rsout)
-        {
-          #Print the rendered HTML
-          $writer->write($$rsout);
-        }
-
-        $writer->close;
-
-      };  #$frwriteManifest
-
-     $watcher = AnyEvent->timer(
-      after => 0,
-      cb => sub {
-        $frwriteManifest->();
-        undef $watcher; # cancel circular-ref
-      });
-
-    };
+    return dispatchManifest($request, $response, $config);
   }
   elsif($request->path_info() eq '/service-worker')
   {
     #------------------------
-    #Service Worker Script
+    #Dispatch Service Worker Script
 
-    return sub {
-      my $responder = shift;
-      my $writer = $responder->([ 200, [ 'Content-Type', 'application/javascript' ]]);
-      my $watcher;
-      my $rhshtmpldata = {'sversion' => '0.0.1', 'vmainpath' => $svmainpath};
-
-      my $fwriteServiceWorkerScript = sub {
-        #------------------------
-        #HTML Render Callback
-
-        my $rsout = undef;
-
-
-        eval
-        {
-          #Render the Template
-          $rsout = render_template_headless($webroot, 'service-worker', $rhshtmpldata);
-        };
-
-        if($@)
-        {
-          $rsout = undef;
-        }
-
-        if(defined $rsout)
-        {
-          #Print the rendered HTML
-          $writer->write($$rsout);
-        }
-
-        $writer->close;
-
-      };  #$fwriteServiceWorkerScript
-
-     $watcher = AnyEvent->timer(
-      after => 0,
-      cb => sub {
-        $fwriteServiceWorkerScript->();
-        undef $watcher; # cancel circular-ref
-      });
-
-    };
+    return dispatchServiceWorker($request, $response, $config);
   } #if($request->path_info() eq '/')
 
 
   #------------------------
   #Any other Page: Not Found Error
 
-  return sub {
-    #------------------------
-    #Error Page
-
-    my $responder = shift;
-    my $writer = $responder->([ 404, [ 'Content-Type', 'text/html' ]]);
-    my $watcher;
-    my $rhshtmpldata = {'pagetitle' => 'Plack Twiggy - Error'
-      , 'vmainpath' => $svmainpath
-      , 'statuscode' => 404
-      , 'errormessage' => 'Not Found.'
-      , 'errordescription' => 'The Page does not exist.'
-    };
-
-    my $fwriteErrorPage = sub {
-      #------------------------
-      #HTML Render Callback
-
-      my $rsout = undef;
-
-
-      eval
-      {
-        #Render the HTML Template
-        $rsout = render_template_html($webroot, 'error', $rhshtmpldata);
-      };
-
-      if($@)
-      {
-        $rsout = undef;
-      }
-
-      if(defined $rsout)
-      {
-        #Print the rendered HTML
-        $writer->write($$rsout);
-      }
-
-      $writer->close;
-
-    };  #$fwriteErrorPage
-
-
-   $watcher = AnyEvent->timer(
-    after => 0,
-    cb => sub {
-      $fwriteErrorPage->();
-      undef $watcher; # cancel circular-ref
-    });
-
-  };
+  return dispatchErrorPageHTML($request, $response, $config);
 };  #$app
 
 
@@ -348,9 +499,6 @@ my $web = builder {
 
 
 print "args dmp:\n", dump @ARGV ;
-print "\n";
-
-print "ENV dmp:\n", dump %ENV ;
 print "\n";
 
 my $host = '0.0.0.0';

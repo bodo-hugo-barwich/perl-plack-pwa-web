@@ -1,5 +1,7 @@
 requires 'local::lib';
 requires 'Data::Dump';
+requires 'YAML::XS';
+requires 'YAML';
 requires 'PSGI';
 requires 'Plack';
 requires 'HTTP::Server::PSGI';
