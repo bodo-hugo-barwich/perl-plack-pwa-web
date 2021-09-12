@@ -17,9 +17,8 @@
   <div id="version">Version: '<span id="versionnumber"></span>'</div>
 </main>
     <script>
-const api_host = 'https://plack-pwa-api.glitch.me';
-//const api_host = 'http://localhost:3100';
-const api_mainpath = '/';
+const api_host = '[% apihost %]';
+const api_mainpath = '[% apimainpath %]';
 
 const svmainpath = '[% vmainpath %]';
 

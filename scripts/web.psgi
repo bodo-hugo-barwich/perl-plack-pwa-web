@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # @author Bodo (Hugo) Barwich
-# @version 2021-09-04
+# @version 2021-09-05
 # @package Plack Twiggy PWA Web
 # @subpackage /scripts/web.psgi
 
@@ -65,6 +65,8 @@ sub  loadConfiguration
   $scnfflnm = $scnfhstnm . '-' . $splkenv . $scnfext;
 
   $scnfflnm = $scnfhstnm . $scnfext unless(-f $scnfdir . $scnfflnm);
+
+  $scnfflnm = 'default-' . $splkenv . $scnfext unless(-f $scnfdir . $scnfflnm);
 
   $scnfflnm = 'default' . $scnfext unless(-f $scnfdir . $scnfflnm);
 
@@ -158,6 +160,8 @@ sub dispatchHomePage
   my $rhshtmpldata = {'pagetitle' => $cnf->{'project'}
     , 'projectname' => $cnf->{'project'}
     , 'vmainpath' => $cnf->{'vmainpath'}
+    , 'apihost' => $cnf->{'apihost'}
+    , 'apimainpath' => $cnf->{'apimainpath'}
   };
   my $rsout = undef;
 
@@ -423,7 +427,8 @@ $scomp .= $ENV{'PLACK_ENV'} || 'deployment';
 
 if(defined $config)
 {
-  print STDERR "Server '", $config->{'component'}, " / ", $scomp, "' - Configuration: loaded.\n";
+  print STDERR "Server '", $config->{'component'}, " / ", $scomp, "' - Configuration: File '", $config->{'configfile'} , "'\n";
+  print STDERR "Server '", $config->{'component'}, " / ", $scomp, "' - Configuration: File loaded.\n";
 }
 else  #Configuration Loading failed
 {
