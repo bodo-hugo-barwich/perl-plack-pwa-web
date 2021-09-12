@@ -61,10 +61,19 @@ jobs:
           cat docker-compose.yml
           mkdir -p cache ; chmod a+w cache images -R
           docker-compose up -d --build
-          docker-compose ps
-          docker-compose ps | sed -re 's/[[:space:]][[:space:]]+/|/g' | cut -d"|" --output-delimiter=" " -f1,3
+
+      # Check Container Health Exit the test when Containers are failed
+#          sudo chmod a+w cache log perl5
+      - name: Check Container Health
+        run: |
+          constat=`docker-compose ps 2>&1` 
+          echo "$constat" 
+          constat=`echo "$constat" | sed -re 's/[[:space:]][[:space:]]+/|/g' | cut -d"|" -f1,3  | grep "|"`
+          echo "$constat"
           docker-compose logs api
           docker-compose logs web
+          confailed=`echo "$constat" | grep -i "exit" | wc -l`
+          if [ $confailed -ne 0 ]; then exit 1 ; fi
 
       - name: Starting Test Sequences
         run: echo "Starting Test Sequences"
