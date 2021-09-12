@@ -30,8 +30,8 @@ jobs:
        # List all available Docker Libraries
       - name: List all available Docker Libraries
         run: |
-          apt-get update 
-          apt-cache search docker | sort
+          sudo apt-get update 
+          sudo apt-cache search docker | sort
 
        # List all installed Perl Libraries
       - name: List all installed Perl Libraries
