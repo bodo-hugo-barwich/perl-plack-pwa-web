@@ -74,7 +74,7 @@ jobs:
           echo "Component 'web' Logs:"
           docker-compose logs web
           confailed=`echo "$constat" | grep -i "exit"`
-          if [ -n "$confailed" ]; then echo -e "Components failed!\n$confailed" 1>&2 ; exit 1 ; fi
+          if [ -n "$confailed" ]; then echo -e "Components failed\!\n$confailed" 1>&2 ; exit 1 ; fi
 
       - name: Starting Test Sequences
         run: echo "Starting Test Sequences"
@@ -83,5 +83,7 @@ jobs:
       - name: Run the Integration Test with 'PhantomJS'
         run: |
           export OPENSSL_CONF=/dev/null ; bin/phantomjs t/waitfor_product-list.js
+          echo "Component 'api' Logs:"
           docker-compose logs api
+          echo "Component 'web' Logs:"
           docker-compose logs web
