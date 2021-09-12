@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # Configure and Run the Testing Job
-  testing:
+  phantomjs-test:
     # The type of runner that the job will run on
     runs-on: ubuntu-20.04
 
@@ -26,6 +26,7 @@ jobs:
       - name: Install available Docker Libraries
         run: |
           sudo apt-get update 
+          sudo apt-cache search containerd | sort
           sudo apt-get install containerd.io docker.io docker-compose
           sudo usermod -aG docker runner
 
