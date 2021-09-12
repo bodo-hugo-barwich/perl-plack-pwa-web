@@ -26,7 +26,7 @@ jobs:
       - name: Install available Docker Libraries
         run: |
           sudo apt-get update 
-          sudo apt-get install docker.io docker-compose
+          sudo apt-get install containerd.io docker.io docker-compose
           sudo usermod -aG docker runner
 
        # List all installed Docker Libraries
