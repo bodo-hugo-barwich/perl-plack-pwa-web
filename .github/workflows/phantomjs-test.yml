@@ -27,7 +27,8 @@ jobs:
         run: |
           sudo apt-get update 
           sudo apt-cache search containerd | sort
-          sudo apt-get install containerd.io docker.io docker-compose
+          sudo apt-cache show containerd
+          sudo apt-get install containerd docker.io docker-compose
           sudo usermod -aG docker runner
 
        # List all installed Docker Libraries
