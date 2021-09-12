@@ -51,7 +51,7 @@ jobs:
         run: |
           cat docker-compose.yml.example | sed -re "s#/absolute/path/to/project#$(pwd)#" > docker-compose.yml
           cat docker-compose.yml
-          chmod a+w cache log perl5
+          sudo chmod a+w cache log perl5
           docker-compose up -d --build
           docker-compose ps
           docker-compose ps | sed -re 's/[[:space:]][[:space:]]+/|/g' | cut -d"|" --output-delimiter=" " -f1,3
