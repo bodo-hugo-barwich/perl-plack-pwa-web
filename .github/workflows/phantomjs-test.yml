@@ -51,8 +51,10 @@ jobs:
         run: |
           cat docker-compose.yml.example | sed -re "s#/absolute/path/to/project#$(pwd)#" > docker-compose.yml
           cat docker-compose.yml
+          chmod a+w cache log perl5
           docker-compose up -d --build
           docker-compose ps
+          docker-compose ps | sed -re 's/[[:space:]][[:space:]]+/|/g' | cut -d"|" --output-delimiter=" " -f1,3
           docker-compose logs api
           docker-compose logs web
 
@@ -63,7 +65,8 @@ jobs:
         run: |
           echo 'User:' $(whoami) 
           echo 'Working Directory:' $(pwd) 
-          echo 'Directory Content:' $(ls -lah)
+          echo 'Directory Content:' 
+          ls -lah
         
       # Test the Controller Functionality
       - name: Run the Controller Tests with 'Plack::Test'
