@@ -69,8 +69,8 @@ jobs:
       - name: Starting Test Sequences
         run: echo "Starting Test Sequences"
         
-      # Test the Controller Functionality
-      - name: Run the Controller Tests with 'Plack::Test'
+      # Test the Component Integration
+      - name: Run the Integration Test with 'PhantomJS'
         run: |
           export OPENSSL_CONF=/dev/null ; bin/phantomjs t/waitfor_product-list.js
           docker-compose logs api

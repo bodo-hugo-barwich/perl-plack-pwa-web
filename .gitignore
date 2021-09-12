@@ -17,7 +17,6 @@ log/*
 web_*.jpg
 
 #API Container - Cache Directory
-!cache/.keep
 cache
 cache/*
 
