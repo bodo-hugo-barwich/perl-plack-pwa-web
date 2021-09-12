@@ -16,7 +16,7 @@ services:
     ports:
      - "3000:3000"
     volumes:
-     - /absolute/path/to/project:/home/plack-pwa:Z
+     - /absolute/path/to/project/images:/home/plack-pwa/images:Z
     environment:
      - COMPONENT=pwa_web
      - PLACK_ENV=test
