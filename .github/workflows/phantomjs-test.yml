@@ -45,6 +45,13 @@ jobs:
         
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+
+      - name: Listing Directory Contents
+        run: |
+          echo 'User:' $(whoami) 
+          echo 'Working Directory:' $(pwd) 
+          echo 'Directory Content:' 
+          ls -lah
         
       # Build Container Images
       - name: Build Container Images with 'docker-compose'
@@ -60,13 +67,6 @@ jobs:
 
       - name: Starting Test Sequences
         run: echo "Starting Test Sequences"
-
-      - name: Listing Directory Contents
-        run: |
-          echo 'User:' $(whoami) 
-          echo 'Working Directory:' $(pwd) 
-          echo 'Directory Content:' 
-          ls -lah
         
       # Test the Controller Functionality
       - name: Run the Controller Tests with 'Plack::Test'
