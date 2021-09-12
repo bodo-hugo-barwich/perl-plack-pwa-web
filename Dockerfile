@@ -15,9 +15,13 @@ RUN groupadd web &&\
   useradd pwa1_web -g web -md /home/plack-pwa -s /sbin/nologin &&\
   chmod a+rx /home/plack-pwa
 ADD ./ /home/plack-pwa
+RUN chown pwa1_web:web /home/plack-pwa/perl5 -R || true\
+	; chown pwa1_web:web /home/plack-pwa/log -R || true\
+	; chown pwa1_web:web /home/plack-pwa/images -R || true
 USER pwa1_web
 WORKDIR /home/plack-pwa
 RUN mkdir -p /home/plack-pwa/perl5 \
   && mkdir -p /home/plack-pwa/log
+VOLUME /home/plack-pwa/images
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["plackup", "--server", "Twiggy", "--port", "3000", "scripts/web.psgi"]

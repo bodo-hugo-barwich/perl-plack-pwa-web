@@ -19,7 +19,6 @@ web_*.jpg
 #API Container - Cache Directory
 cache
 cache/*
-!cache/.keep
 
 #Local Docker-Compose Configuration
 docker-compose.yml

@@ -1,0 +1,89 @@
+# This is a basic workflow to help you get started with Actions
+#Run configured Tests from the Test Directory
+name: Integration Test with PhantomJS
+
+# Controls when the action will run. Triggers the workflow pull request
+# events but only for the master branch
+on:
+  pull_request:
+    # Pull Request events on master branch
+    branches: 
+      - master
+  workflow_dispatch:
+     branches:    
+      - master  
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Configure and Run the Testing Job
+  phantomjs-test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-20.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+       # Install available Docker Libraries
+#      - name: Install available Docker Libraries
+#        run: |
+#          sudo apt-get update 
+#          sudo apt-cache search containerd | sort
+#          sudo apt-cache show containerd
+#          sudo apt-get install containerd docker.io docker-compose
+#          sudo usermod -aG docker runner
+
+       # List all installed Docker Libraries
+      - name: List all installed Docker Libraries
+        run: |
+          dpkg --get-selections | grep -i docker | sort
+        
+      # Start Docker Engine
+#          sudo systemctl start docker
+      - name: Start Docker Engine
+        run: |
+          sudo systemctl status docker -l
+          
+        
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Listing Directory Contents
+        run: |
+          echo 'User:' $(whoami) 
+          echo 'Working Directory:' $(pwd) 
+          echo 'Directory Content:' 
+          ls -lah
+        
+      # Build Container Images
+#          sudo chmod a+w cache log perl5
+      - name: Build Container Images with 'docker-compose'
+        run: |
+          cat docker-compose.yml.example | sed -re "s#/absolute/path/to/project#$(pwd)#" > docker-compose.yml
+          cat docker-compose.yml
+          mkdir -p cache ; chmod a+w cache images -R
+          docker-compose up -d --build
+
+      # Check Container Health Exit the test when Containers are failed
+      - name: Check Container Health
+        run: |
+          constat=`docker-compose ps 2>&1` 
+          echo -e "Container Status Complete:\n$constat" 
+          constat=`echo "$constat" | sed -re 's/[[:space:]][[:space:]]+/|/g' | cut -d"|" -f1,3  | grep "|"`
+          echo -e "Container Status Up:\n$constat"
+          echo "Component 'api' Logs:"
+          docker-compose logs api
+          echo "Component 'web' Logs:"
+          docker-compose logs web
+          confailed=`echo "$constat" | grep -i "exit" | wc -l`
+          if [ $confailed -ne 0 ]; then exit 1 ; fi
+
+      - name: Starting Test Sequences
+        run: echo "Starting Test Sequences"
+        
+      # Test the Component Integration
+      - name: Run the Integration Test with 'PhantomJS'
+        run: |
+          export OPENSSL_CONF=/dev/null ; bin/phantomjs t/waitfor_product-list.js
+          echo "Component 'api' Logs:"
+          docker-compose logs api
+          echo "Component 'web' Logs:"
+          docker-compose logs web
