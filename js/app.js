@@ -1,6 +1,6 @@
 /**
- * @version 2021-05-23
- * @package PWA Service Worker Communication
+ * @version 2021-07-25
+ * @package PWA ServiceWorker Initialization
  * @subpackage app.js
  */
 
@@ -9,6 +9,8 @@
  *
  *---------------------------------
  * Requirements:
+ * - The Navigator must support ServiceWorker Functionality
+ * - The JavaScript Module "service-worker_utils.js" must be installed
  *
  *---------------------------------
  * Extensions:
@@ -22,7 +24,7 @@
 //==============================================================================
 //Auxiliary Functions
 
-
+/**/
 function registeredServiceWorker(registration)
 {
   console.log('ServiceWorker registration succeeded:', registration);
@@ -63,13 +65,13 @@ function doSkipWaiting(registration)
     if(worker != null)
     {
       worker.postMessage('SKIP_WAITING');
+
+    	window.location.reload();
     }
     else
     {
       console.log('ServiceWorkerRegistration: No Update waiting.');
     }
-
-    window.location.reload();
   } //if(registration)
 }
 
@@ -80,6 +82,8 @@ function doCheckVersion(registration)
 
   console.log('doCheckVersion - go ...');
   console.log('doCheckVersion - ServiceWorkerRegistration: ', registration);
+
+	workerstatus.version = '';
 
   if(registration)
   {
@@ -127,17 +131,20 @@ function doCheckUpdate(registration)
   var bregok = false;
   var bupdok = false;
 
+
   console.log('doCheckUpdate - go ...');
   console.log('doCheckUpdate - ServiceWorkerRegistration: ', registration);
+
+	workerstatus.updatewaiting = false;
 
   if(registration)
   {
     console.log('doCheckUpdate - registration.active (' + typeof registration.active + '): ', (registration.active));
 
-	if(registration.active != null)
-	{
-	  bregok = true;
-	}
+		if(registration.active != null)
+		{
+		  bregok = true;
+		}
 
     console.log('doCheckUpdate - registration.installing (' + typeof registration.installing + '): ', (registration.installing));
     console.log('doCheckUpdate - registration.waiting (' + typeof registration.waiting + '): ', (registration.waiting));
@@ -154,8 +161,10 @@ function doCheckUpdate(registration)
   } //if(registration)
 
   if(bregok
-	&& bupdok)
+		&& bupdok)
   {
+		workerstatus.updatewaiting = true;
+
     console.log('Service Worker Update detected!');
 
     if(typeof notification !== 'undefined')
@@ -196,15 +205,22 @@ function updatedServiceWorker(updateevent)
 
 }
 
-function updateWindow()
+function doUpdateWindow()
 {
-  console.log('updateWindow - go ...');
+  console.log('doUpdateWindow() - go ...');
 
-  // get the ServiceWorkerRegistration instance
-  navigator.serviceWorker.getRegistration()
-    .then(registration => doSkipWaiting(registration))
-    .catch(err => failedSkipWaiting(err));
-
+	//Halt Update untill it was confirmed by the ServiceWorker
+	if(workerstatus.updatewaiting)
+	{
+	  // get the ServiceWorkerRegistration instance
+	  navigator.serviceWorker.getRegistration()
+	    .then(registration => doSkipWaiting(registration))
+	    .catch(err => failedSkipWaiting(err));
+	}
+	else
+	{
+		console.log('Update: Update not queued.');
+	}
 }
 
 function showWorkerMessage(messageevent)
@@ -229,11 +245,13 @@ function showWorkerMessage(messageevent)
 
     if(messageevent.data.version)
     {
-      console.log(`Message: Version Number '${messageevent.data.version}'`);
+			workerstatus.version = messageevent.data.version;
+
+      console.log("Message: Version Number '" + workerstatus.version + "'");
 
       if(typeof vernobox !== 'undefined')
       {
-        vernobox.innerHTML = messageevent.data.version;
+        vernobox.innerHTML = workerstatus.version;
       }
       else
       {
@@ -271,23 +289,18 @@ function failedCheckVersion(error)
 //Executive Section
 
 
+var workerstatus = {'version': '', 'updatewaiting': false};
+
+
+console.log("Load Event: app.js loaded.");
+
+
 //------------------------
 //Check Visual Output Boxes
-
-if(typeof bxproducts === 'undefined')
-{
-  console.log("Target Box Element '#productlistbox' is missing!");
-}
 
 if(typeof notification === 'undefined')
 {
   console.log("Notification Box Element '#notification' is missing!");
-}
-
-if(typeof updatebox === 'undefined'
-  || typeof updatelink === 'undefined')
-{
-  console.log("Update Box Element '#update' is missing!");
 }
 
 if(typeof vernobox === 'undefined')
@@ -300,21 +313,53 @@ if(typeof messagebox === 'undefined')
   console.log("Worker Message Box Element '#workermessage' is missing!");
 }
 
-document.addEventListener("DOMContentLoaded", initPage(bxproducts, lstproducts));
+if(typeof updatebox === 'undefined'
+  || typeof updatelink === 'undefined')
+{
+  console.log("Update Box Element '#update' is missing!");
+}
+
+if(typeof updatelink !== 'undefined')
+{
+	workerstatus.updatewaiting = false;
+
+
+  updatelink.onclick = doUpdateWindow;
+}
 
 
 //------------------------
 //Initialize Service Worker
 
+console.log("Load Event: ServiceWorker Check do ...");
+
 if ("serviceWorker" in navigator)
 {
-  window.addEventListener("load", function() {
-    navigator.serviceWorker.register(svmainpath + "service-worker")
-      //Pass the ServiceWorkerRegistration instance
-      .then(reg => registeredServiceWorker(reg))
-      .then(reg => doCheckVersion(reg))
-      .then(reg => doCheckUpdate(reg))
-      .catch(err => console.log("service worker not registered", err));
 
-  });
+	if(typeof registeredServiceWorker === 'function')
+	{
+		console.log("Load Event: ServiceWorker Initialize do ...");
+
+/**/
+			//Register the ServiceWorker Script
+		  window.addEventListener("load", function() {
+		    navigator.serviceWorker.register(svmainpath + "service-worker")
+		      //Pass the ServiceWorkerRegistration instance
+		      .then(reg => registeredServiceWorker(reg))
+		      .then(reg => doCheckVersion(reg))
+		      .then(reg => doCheckUpdate(reg))
+		      .catch(err => console.log("service worker not registered", err));
+
+		  });
+
+	}
+	else
+	{
+	  console.log("ServiceWorker: Script Utilities are not loaded!");
+	} //if ("serviceWorker" in navigator)
+}
+else
+{
+  console.log("ServiceWorker not supported!");
 } //if ("serviceWorker" in navigator)
+

@@ -1,0 +1,22 @@
+version: '3'
+services:
+  api:
+    container_name: 'pwa_api'
+    image: ghcr.io/bodo-hugo-barwich/plack-pwa_api:latest
+    ports:
+      - "3100:3000"
+    volumes:
+      - /absolute/path/to/project/cache:/home/plack-pwa/cache:Z
+    environment:
+      - COMPONENT=pwa_api
+  web:
+    container_name: 'pwa_web'
+    image: plack-pwa_web
+    build: .
+    ports:
+     - "3000:3000"
+    volumes:
+     - /absolute/path/to/project:/home/plack-pwa:Z
+    environment:
+     - COMPONENT=pwa_web
+     - PLACK_ENV=test

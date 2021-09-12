@@ -26,6 +26,10 @@ if [ "$1" = "plackup" ]; then
 
   #Checking Plack Version
 
+  if [ ! -d log ]; then
+    mkdir log
+  fi
+
   echo -n "Plack Version: "
 
   perl -MPlack -e 'print $Plack::VERSION;' 2>/dev/null 1>log/perl_plack.log ||\

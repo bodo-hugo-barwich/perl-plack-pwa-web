@@ -1,0 +1,20 @@
+---
+
+# @author Bodo (Hugo) Barwich
+# @version 2021-09-05
+# @package Plack Twiggy REST API
+# @subpackage /config/default.yml
+
+# This is the Default Service Configuration
+# This will be loaded when no customized Configuration exists
+#
+
+component: 'unknown'
+project: 'Plack Twiggy PWA'
+codename: 'PlackPWA'
+version: '0.0.2'
+vmainpath: '/'
+maindirectory: ''
+configfile: ''
+apihost: 'https://plack-pwa-api.glitch.me'
+apimainpath: '/'

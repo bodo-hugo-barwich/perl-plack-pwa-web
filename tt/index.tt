@@ -17,8 +17,8 @@
   <div id="version">Version: '<span id="versionnumber"></span>'</div>
 </main>
     <script>
-const api_host = 'https://plack-pwa-api.glitch.me';
-const api_mainpath = '/';
+const api_host = '[% apihost %]';
+const api_mainpath = '[% apimainpath %]';
 
 const svmainpath = '[% vmainpath %]';
 
@@ -28,8 +28,6 @@ const updatebox = document.querySelector("#update");
 const updatelink = document.querySelector("#update-link");
 const messagebox = document.querySelector("#workermessage");
 const vernobox = document.querySelector("#versionnumber");
-
-var sversion = '';
 
 var lstproducts = undefined;
 /*
@@ -84,11 +82,17 @@ var lstproducts = undefined;
 </script>
 <script src="[% vmainpath %]js/api.js"></script>
 <script src="[% vmainpath %]js/home.js"></script>
+<!--  <script src="[% vmainpath %]js/service-worker_utils.js"></script>  -->
 <script src="[% vmainpath %]js/app.js"></script>
 <script type="text/javascript">
-if(typeof updatelink !== 'undefined')
-{
-  updatelink.onclick = updateWindow;
-}
+console.log("Load Event: HTML done.");
+
+document.addEventListener("DOMContentLoaded", function() {
+  console.log("Load Event: DOMContentLoaded go ...");
+  console.log("Load Event: initPage() do ...");
+
+  initPage(bxproducts, lstproducts);
+});
+
 </script>
 
