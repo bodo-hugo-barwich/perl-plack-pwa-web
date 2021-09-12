@@ -5,7 +5,9 @@
     <!--
     [![Automated Plack::Test](https://github.com/bodo-hugo-barwich/plack-pwa-web/actions/workflows/plack-test.yml/badge.svg)](https://github.com/bodo-hugo-barwich/plack-pwa-web/actions/workflows/plack-test.yml)
     -->
+</div>
 
+<div>
     <a target="_blank" rel="noopener noreferrer" href="https://github.com/bodo-hugo-barwich/plack-pwa-web/actions/workflows/phantomjs-test.yml">
     	<img src="https://github.com/bodo-hugo-barwich/plack-pwa-web/actions/workflows/phantomjs-test.yml/badge.svg" alt="Integration Test with PhantomJS" style="max-width:100%;">
     </a>
