@@ -10,3 +10,4 @@ requires 'AnyEvent';
 requires 'HTTP::Parser::XS';
 requires 'Twiggy';
 requires 'Template';
+requires 'Data::Dump';

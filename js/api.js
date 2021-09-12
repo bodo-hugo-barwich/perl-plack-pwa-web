@@ -9,12 +9,13 @@
  */
 
 
-function fetchProductList(bxdisplay, lstcontents)
+function fetchProductList(fonsuccess, fonerror, arrparameters)
 {
   console.log("Coffees: fetching ..."); // response is the server response
 
   // 1. Create a new XMLHttpRequest object
   var xhr = new XMLHttpRequest();
+
 
   // 2. Configure it: GET-request for the URL /article/.../load
   xhr.open('GET', api_host + api_mainpath + 'coffees');
@@ -36,37 +37,52 @@ function fetchProductList(bxdisplay, lstcontents)
 
   // 4. This will be called after the response is received
   xhr.onload = function() {
-    if (xhr.status != 200) { // analyze HTTP status of the response
-      console.log("Coffees: Fetch failed with Error [" + xhr.status + "]: '" + xhr.statusText + "'"); // e.g. 404: Not Found
+    if(xhr.status == 200)
+		{
+			// show the result
 
-			showFetchError(bxdisplay, "Coffees: Product List cannot be loaded!");
-    } else { // show the result
+			var contents = undefined;
+
+
       console.log("Coffees: fetched, got '" + xhr.response.length + "' Entries."); // response is the server response
 
-      lstcontents = xhr.response;
+      contents = xhr.response;
 
-			console.log("Coffees: Type: '" + typeof lstcontents + "'");
+			console.log("Coffees: Type: '" + typeof contents + "'");
 
-			if(typeof lstcontents == 'string')
+			if(typeof contents == 'string')
 			{
-				lstcontents = JSON.parse(lstcontents);
+				contents = JSON.parse(contents);
 			}
+
+			arrparameters.push(contents);
 
       console.log("Coffees: updating ..."); // response is the server response
 
-      showProductList(bxdisplay, lstcontents);
+      fonsuccess(arrparameters);
 
       console.log("Coffees: update done.");
     }
+		else //The Request failed
+		{
+			// analyze HTTP status of the response
+
+      console.log("Coffees: Fetch failed with Error [" + xhr.status + "]: '" + xhr.statusText + "'"); // e.g. 404: Not Found
+
+			arrparameters.push("Coffees: Product List cannot be loaded!");
+
+			fonerror(arrparameters);
+		}	//if(xhr.status == 200)
   };	//xhr.onload
 }
 
-function fetchCoffee(bxdisplay, link_name)
+function fetchCoffee(fonsuccess, fonerror, arrparameters)
 {
   console.log("Coffee: fetching ..."); // response is the server response
 
   // 1. Create a new XMLHttpRequest object
   var xhr = new XMLHttpRequest();
+
 
   // 2. Configure it: GET-request for the URL /article/.../load
   xhr.open('GET', api_host + api_mainpath + 'coffee/' + link_name);
@@ -88,19 +104,35 @@ function fetchCoffee(bxdisplay, link_name)
 
   // 4. This will be called after the response is received
   xhr.onload = function() {
-    if (xhr.status != 200) { // analyze HTTP status of the response
-      console.log("Coffee: Fetch failed with Error [" + xhr.status + "]: '" + xhr.statusText + "'"); // e.g. 404: Not Found
-    } else { // show the result
+    if(xhr.status == 200)
+		{
+			var contents = undefined;
+
+
+			// show the result
       console.log("Coffee: fetched, got '" + xhr.response.length + "' Entries."); // response is the server response
 
-      coffee = xhr.response;
+      contents = xhr.response;
+
+			arrparameters.push(contents);
 
       console.log("Coffee: updating ..."); // response is the server response
 
-      showCoffee(bxdisplay, coffee);
+      fonsuccess(arrparameters);
 
       console.log("Coffee: update done.");
     }
+		else	//The Request failed
+		{
+			// analyze HTTP status of the response
+
+      console.log("Coffee: Fetch failed with Error [" + xhr.status + "]: '" + xhr.statusText + "'"); // e.g. 404: Not Found
+
+			arrparameters.push("Coffee: Product Data cannot be loaded!");
+
+			fonerror(arrparameters);
+
+		}	//if(xhr.status == 200)
   };	//xhr.onload
 }
 

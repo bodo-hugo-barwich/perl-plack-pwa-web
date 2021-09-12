@@ -14,8 +14,10 @@
  */
 
 
-function showProductList(bxdisplay, lstcontents)
+function showProductList(arrparameters)
 {
+	var bxdisplay = arrparameters[0];
+	var lstcontents = arrparameters[1];
   var output = "Coffes: showing ...";
 
 
@@ -96,7 +98,6 @@ function showProductList(bxdisplay, lstcontents)
 		                `;
 */
 			}	//for(skey in arrcoffees)
-
 	  }
 	  else	//Product Data empty
 	  {
@@ -111,8 +112,12 @@ function showProductList(bxdisplay, lstcontents)
 }
 
 
-function showFetchError(bxdisplay, serrormessage)
+function showFetchError(arrparameters)
 {
+	var bxdisplay = arrparameters[0];
+	var serrormessage = arrparameters[1];
+
+
 	if(typeof serrormessage === 'undefined')
 	{
 		serrormessage = 'Coffees: An Error occurred when loading Product List!'
@@ -127,11 +132,14 @@ function showFetchError(bxdisplay, serrormessage)
 
 function initPage(bxdisplay, lstcontents)
 {
-  showProductList(bxdisplay, lstcontents);
+	var arrparameters = [bxdisplay];
+
+
+  showProductList([bxdisplay, lstcontents]);
 
   console.log("Coffees: fetch do ...");
 
-  fetchProductList(bxdisplay, lstcontents);
+  fetchProductList(showProductList, showFetchError, arrparameters);
 
   console.log("Coffees: update queued.");
 }
