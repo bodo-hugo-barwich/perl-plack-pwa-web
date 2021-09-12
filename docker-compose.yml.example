@@ -19,3 +19,4 @@ services:
      - /absolute/path/to/project:/home/plack-pwa:Z
     environment:
      - COMPONENT=pwa_web
+     - PLACK_ENV=test
