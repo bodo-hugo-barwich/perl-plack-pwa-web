@@ -53,6 +53,8 @@ jobs:
           cat docker-compose.yml
           docker-compose up -d --build
           docker-compose ps
+          docker-compose logs api
+          docker-compose logs web
 
       - name: Starting Test Sequences
         run: echo "Starting Test Sequences"
