@@ -23,13 +23,13 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
        # Install available Docker Libraries
-      - name: Install available Docker Libraries
-        run: |
-          sudo apt-get update 
-          sudo apt-cache search containerd | sort
-          sudo apt-cache show containerd
-          sudo apt-get install containerd docker.io docker-compose
-          sudo usermod -aG docker runner
+#      - name: Install available Docker Libraries
+#        run: |
+#          sudo apt-get update 
+#          sudo apt-cache search containerd | sort
+#          sudo apt-cache show containerd
+#          sudo apt-get install containerd docker.io docker-compose
+#          sudo usermod -aG docker runner
 
        # List all installed Docker Libraries
       - name: List all installed Docker Libraries
@@ -37,10 +37,11 @@ jobs:
           dpkg --get-selections | grep -i docker | sort
         
       # Start Docker Engine
+#          sudo systemctl start docker
       - name: Start Docker Engine
         run: |
-          sudo systemctl start docker
           sudo systemctl status docker -l
+          
         
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
