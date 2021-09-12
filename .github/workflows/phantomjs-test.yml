@@ -63,17 +63,18 @@ jobs:
           docker-compose up -d --build
 
       # Check Container Health Exit the test when Containers are failed
-#          sudo chmod a+w cache log perl5
       - name: Check Container Health
         run: |
           constat=`docker-compose ps 2>&1` 
-          echo "$constat" 
+          echo -e "Container Status Complete:\n$constat" 
           constat=`echo "$constat" | sed -re 's/[[:space:]][[:space:]]+/|/g' | cut -d"|" -f1,3  | grep "|"`
-          echo "$constat"
+          echo -e "Container Status Up:\n$constat"
+          echo "Component 'api' Logs:"
           docker-compose logs api
+          echo "Component 'web' Logs:"
           docker-compose logs web
-          confailed=`echo "$constat" | grep -i "exit" | wc -l`
-          if [ $confailed -ne 0 ]; then exit 1 ; fi
+          confailed=`echo "$constat" | grep -i "exit"`
+          if [ -n "$confailed" ]; then echo -e "Components failed!\n$confailed" 1>&2 ; exit 1 ; fi
 
       - name: Starting Test Sequences
         run: echo "Starting Test Sequences"
@@ -84,9 +85,3 @@ jobs:
           export OPENSSL_CONF=/dev/null ; bin/phantomjs t/waitfor_product-list.js
           docker-compose logs api
           docker-compose logs web
-
-      # Runs a set of commands using the runners shell
-      #- name: Run a multi-line script
-      #  run: |
-      #    echo Add other actions to build,
-      #    echo test, and deploy your project.
