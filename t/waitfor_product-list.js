@@ -13,28 +13,34 @@
 
 "use strict";
 
-function waitFor(testFx, onReady, timeOutMillis) {
-    var maxtimeOutMillis = timeOutMillis ? timeOutMillis : 10000, //< Default Max Timout is 10s
-        start = new Date().getTime(),
-        condition = false,
-        interval = setInterval(function() {
-            if ( (new Date().getTime() - start < maxtimeOutMillis) && !condition ) {
-                // If not time-out yet and condition not yet fulfilled
-                condition = (typeof(testFx) === "string" ? eval(testFx) : testFx()); //< defensive code
-            } else {
-                if(!condition) {
-                    // If condition still not fulfilled (timeout but condition is 'false')
-                    console.log("'waitFor()' timeout");
-					page.render('web_home_timeout.jpg', {format: 'jpg', quality: '100'});
-                    phantom.exit(4);
-                } else {
-                    // Condition fulfilled (timeout and/or condition is 'true')
-                    console.log("'waitFor()' finished in " + (new Date().getTime() - start) + "ms.");
-                    typeof(onReady) === "string" ? eval(onReady) : onReady(); //< Do what it's supposed to do once the condition is fulfilled
-                    clearInterval(interval); //< Stop this interval
-                }
-            }
-        }, 250); //< repeat check every 250ms
+function waitFor(testFx, onReady, timeOutMillis, checkmilliseconds)
+{
+	var itmtimeout = timeOutMillis ? timeOutMillis : 10000;
+	var itmcheck = checkmilliseconds ? checkmilliseconds : 200;
+
+  var maxtimeOutMillis = itmtimeout, //< Default Max Timout is 10s
+      start = new Date().getTime(),
+      condition = false,
+      interval = setInterval(function() {
+          if ( (new Date().getTime() - start < maxtimeOutMillis) && !condition ) {
+              // If not time-out yet and condition not yet fulfilled
+              condition = (typeof(testFx) === "string" ? eval(testFx) : testFx()); //< defensive code
+          } else {
+              if(!condition) {
+                  // If condition still not fulfilled (timeout but condition is 'false')
+                  console.log("'waitFor()' timeout");
+
+				page.render('web_home_timeout.jpg', {format: 'jpg', quality: '100'});
+
+                  phantom.exit(4);
+              } else {
+                  // Condition fulfilled (timeout and/or condition is 'true')
+                  console.log("'waitFor()' finished in " + (new Date().getTime() - start) + "ms.");
+                  typeof(onReady) === "string" ? eval(onReady) : onReady(); //< Do what it's supposed to do once the condition is fulfilled
+                  clearInterval(interval); //< Stop this interval
+              }
+          }
+      }, itmcheck); //< repeat check every 200ms
 };
 
 function printSettings(settings)
@@ -135,14 +141,15 @@ console.log("settings 1 :");
 printSettings(page.settings);
 
 
-// Open Twitter on 'sencha' profile and, onPageLoad, do...
+// Open the Home Page and wait for the Product List Data
 page.open(main_url, function (status) {
-    // Check for page load success
-    if (status !== "success") {
-        console.log("Unable to access network");
-           phantom.exit(1);
-    } else {
-		console.log("Page URL '" + page.url + "': opened with Status [" + status + "].");
+	// Check for page load success
+
+	console.log("Page URL '" + page.url + "': finished with Status [" + status + "].");
+
+	if(status == "success")
+	{
+		console.log("Page URL '" + page.url + "': Page Loading done.");
 
 		page.render('web_home_start.jpg', {format: 'jpg', quality: '100'});
 
@@ -180,11 +187,9 @@ page.open(main_url, function (status) {
 		console.log("Script List: found Scripts '" + lstscrs + "'");
 
 
-
 		var scr = undefined;
 		var iscr = -1;
 		var iscrcnt = lstscrs.count;
-
 
 
 		for(iscr = 0; iscr < iscrcnt; iscr++)
@@ -202,56 +207,55 @@ page.open(main_url, function (status) {
 
 			console.log("Script List: Count '" + lstscrs.loaded + " / " + lstscrs.count + "' injected");
 
+			if(lstscrs.loaded == lstscrs.count)
+			{
+				page.evaluateJavaScript(function() {
+					console.log("Function 'initPage()': Type '" + typeof initPage + "'");
 
-				if(lstscrs.loaded == lstscrs.count)
-				{
-					page.evaluateJavaScript(function() {
-						console.log("Function 'initPage()': Type '" + typeof initPage + "'");
+					if(typeof initPage === 'function')
+					{
+						console.log("Script List: Function 'initPage()' - do ...");
 
-						if(typeof initPage === 'function')
-						{
-							console.log("Script List: Function 'initPage()' - do ...");
-
-							initPage(bxproducts, lstproducts);
-						}
-						else
-						{
-							console.log("Function 'initPage()': Does Not Exist!");
-						}
-					});	//page.evaluateJavaScript()
-				}	//if(lstscrs.loaded == lstscrs.count)
-
+						initPage(bxproducts, lstproducts);
+					}
+					else
+					{
+						console.log("Function 'initPage()': Does Not Exist!");
+					}
+				});	//page.evaluateJavaScript()
+			}	//if(lstscrs.loaded == lstscrs.count)
 		}	//for(iscr = 0; iscr < iscrcnt; iscr++)
 
-
-
-        // Wait for 'signin-dropdown' to be visible
-        waitFor(function() {
+    // Wait for 'signin-dropdown' to be visible
+    waitFor(function() {
 			console.log("check page ...");
 
-
-            // Check in the page if a specific element is now visible
-            return page.evaluate(function() {
+      // Check in the page if a specific element is now visible
+      return page.evaluate(function() {
 				var bxlist = document.getElementById('productlistbox');
 
 				console.log("box 'productlistbox' content: '" + bxlist.innerHTML + "'");
-/*
-
-				console.log(`box 'productlistbox' content: ${bxlist.innerHTML}`);
-
-                return bxlist.visible;
-*/
 
 				//The List Box must contain Product Cards
-				//bxlist.innerHTML.indexOf('showing') !== -1
-				return (bxlist.innerHTML !== '');
-            });
-        }, function() {
-           console.log("The Product List should be visible now.");
-           phantom.exit();
-        });
+				//bxlist.innerHTML !== ''
+				return (bxlist.innerHTML.indexOf('View Recipe') !== -1);
 
-    }
+      });
+    }, function() {
+			console.log("The Product List should be visible now.");
+
+			//Exit with Success
+      phantom.exit();
+    });
+	}
+	else	//Page Loading failed
+	{
+  	console.log("Page URL '" + page.url + "': Page Loading failed!");
+
+		//Exit with Error
+		phantom.exit(1);
+
+  }	//if(status == "success")
 });
 
 

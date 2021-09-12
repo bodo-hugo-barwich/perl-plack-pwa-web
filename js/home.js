@@ -81,7 +81,7 @@ function showProductList(arrparameters)
 				link = document.createElement('a');
 				link.className = 'card--link';
 
-				slnktxt = document.createTextNode('See Recipe');
+				slnktxt = document.createTextNode('View Recipe');
 
 				link.appendChild(slnktxt);
 				card.appendChild(link);
