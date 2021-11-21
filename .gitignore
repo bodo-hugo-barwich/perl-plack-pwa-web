@@ -3,6 +3,9 @@
 .node-gyp
 node_modules
 
+#Project Files
+.project
+
 #Installation Logs
 .cpanm
 blib
@@ -10,11 +13,9 @@ perl5
 log
 log/*
 
-#Project Files
-.project
-
-#Test Screenshots
+#Test Tools and Artifacts
 web_*.jpg
+bin/phantomjs
 
 #API Container - Cache Directory
 cache
